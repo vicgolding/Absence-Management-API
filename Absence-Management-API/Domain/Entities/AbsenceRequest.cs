@@ -38,7 +38,7 @@ public class AbsenceRequest
         }
     }
 
-    public void DeclineRequest()
+    public void DenyRequest()
     {
         try
         {
