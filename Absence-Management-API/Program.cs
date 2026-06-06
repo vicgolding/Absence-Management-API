@@ -1,8 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using Absence_Management_API.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<AbsencesContext>(options =>
+    options.UseInMemoryDatabase("TestDb"));
 
 builder.Services.AddCors(options =>
 {
