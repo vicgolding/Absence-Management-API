@@ -3,9 +3,9 @@ using Absence_Management_API.Domain.Entities;
 
 namespace Absence_Management_API.Infrastructure;
 
-public class AbsencesContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public AbsencesContext () { }
+    public ApplicationDbContext (DbContextOptions options) : base(options) { }
 
     public DbSet<AbsenceRequest> AbsenceRequests { get; set; }
     
