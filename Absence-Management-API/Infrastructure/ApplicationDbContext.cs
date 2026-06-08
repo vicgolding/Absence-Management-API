@@ -8,10 +8,4 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext (DbContextOptions options) : base(options) { }
 
     public DbSet<AbsenceRequest> AbsenceRequests { get; set; }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseInMemoryDatabase("TestDb");
-    }
-    
 }

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Absence_Management_API.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Absence_Management_API.Domain.Entities;
+using Absence_Management_API.Domain.Interfaces;
+using Absence_Management_API.Infrastructure;
 
 namespace Absence_Management_API.Application.Controllers;
 
@@ -12,7 +14,7 @@ namespace Absence_Management_API.Application.Controllers;
 public class AbsenceRequestsController : ControllerBase
 {
     private readonly IAbsenceRepository _absenceRepository;
-
+    
     public AbsenceRequestsController(IAbsenceRepository absenceRepository) =>
         _absenceRepository = absenceRepository;
     
