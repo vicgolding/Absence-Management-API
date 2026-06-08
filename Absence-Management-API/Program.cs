@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Absence_Management_API.Infrastructure;
 using Absence_Management_API.Domain.Entities;
-// TODO: using Absence_Management_API.Application.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,17 +11,18 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("DataSource=absencerequests.db"));
 
-// TODO: builder.Services.AddControllers();
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         builder => builder
-            .WithOrigins("http://localhost:3000/")
+            .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
 
 var app = builder.Build();
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -32,17 +32,18 @@ using (var scope = app.Services.CreateScope())
     if (!db.AbsenceRequests.Any())
     {
         db.AbsenceRequests.AddRange(
-            new AbsenceRequest(Guid.NewGuid(), 1, 0, 0),
-            new AbsenceRequest(Guid.NewGuid(), 2, 0, 0),
-            new AbsenceRequest(Guid.NewGuid(), 3, 0, 0)
+            new AbsenceRequest(Guid.NewGuid(), 1, 0, 0, new DateTime(), new DateTime()),
+            new AbsenceRequest(Guid.NewGuid(), 2, 0, 0, new DateTime(), new DateTime()),
+            new AbsenceRequest(Guid.NewGuid(), 3, 0, 0, new DateTime(), new DateTime())
         );
         db.SaveChanges();
         Console.WriteLine("Seed of mock data successful.");
     }
 }
 
+
 app.UseCors("AllowReactApp");
-// TODO: app.MapControllers();
+app.MapControllers();
 
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/api/absence-requests", async (ApplicationDbContext db) =>
