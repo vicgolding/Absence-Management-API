@@ -8,26 +8,27 @@ public class AbsenceRequest
     public int EmployeeId { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
     public AbsenceStatus AbsenceStatus { get; private set; } 
-    private DateTime _startDate;
-    private DateTime _endDate;
+    // TODO: public static readonly DateTime StartDate;
+    // TODO: public static readonly DateTime EndDate;
     public string Comment { get; private set; }
 
     public AbsenceRequest(Guid id, int employeeId, AbsenceType absenceType, AbsenceStatus absenceStatus,
-        DateTime startDate, DateTime endDate, string? comment = null)
+        string? comment = null)
     {
         Id = Guid.NewGuid();
         EmployeeId = employeeId;
         AbsenceType = absenceType;
         AbsenceStatus = 0;
-        _startDate = startDate;
-        _endDate = endDate;
+        // TODO: _startDate = startDate;
+        // TODO: _endDate = endDate;
+        Comment = "";
     }
     
     public void ApproveRequest()
     {
         try
         {
-            if ( _startDate >= _endDate || _endDate <= _startDate || AbsenceStatus != 0 )
+            if (AbsenceStatus != 0 )
             {
                 throw new Exception();
             }
@@ -42,7 +43,7 @@ public class AbsenceRequest
     {
         try
         {
-            if (_startDate >= _endDate || _endDate <= _startDate || AbsenceStatus != 0)
+            if (AbsenceStatus != 0)
             {
                 throw new Exception();
             }
