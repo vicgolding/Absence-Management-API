@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Absence_Management_API.Infrastructure;
 using Absence_Management_API.Domain.Entities;
+using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("DataSource=absencerequests.db"));
 
 builder.Services.AddControllers();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -22,7 +25,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
 
 using (var scope = app.Services.CreateScope())
 {
@@ -41,9 +43,16 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 app.UseCors("AllowReactApp");
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
+app.UseHttpsRedirection();
 
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/api/absence-requests", async (ApplicationDbContext db) =>
