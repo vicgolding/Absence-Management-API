@@ -13,9 +13,25 @@ function App() {
         .catch(err => console.error("API Error:", err));
   }, []);
   
+  async function handleFormData(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    console.log(formData);
+    try {
+      const response = await fetch("https://localhost:5013/api/absence-requests", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (response.status === 201) {
+        console.log("success");
+      }    
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   function processFormData(formData) {
-    const employeeName = formData.get("employeeName");
-    const absenceType = formData.get("selectAbsenceType");
     const startDate = formData.get("startDate");
     const endDate = formData.get("endDate");
     const startDateYear = startDate.slice(0, 4);
@@ -24,17 +40,10 @@ function App() {
     const endDateYear = endDate.slice(0, 4);
     const endDateMonth = endDate.slice(5, 7);
     const endDateDay = endDate.slice(8, 10);
-    const comments = formData.get("comments");
-    const data = JSON.stringify(
-        {
-          employeeName: employeeName,
-          absenceType: absenceType,
-          startDate: `${startDateYear}-${startDateMonth}-${startDateDay}T00:00:00`,
-          endDate: `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`,
-          comments: comments
-        }
-    ); 
-    console.log(data);
+    const processedStartDate = `${startDateYear}-${startDateMonth}-${startDateDay}T00:00:00`;
+    const processedEndDate = `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`;
+    console.log(processedStartDate);
+    console.log(processedEndDate)
   }
   
   return (
@@ -69,6 +78,9 @@ function App() {
                 Kommentar
               </th>
               <th>
+                Status
+              </th>
+              <th>
                 Aktion
               </th>
             </tr>
@@ -80,23 +92,26 @@ function App() {
                     {absence.id}
                   </th>
                   <td>
-                    {absence.employeeId}
+                    {absence.employeeName}
                   </td>
                   <td>
                     {absence.absenceType}
                   </td>
                   <td>
-                    {absence.startDate}
+                    {absence.startDate.slice(0, 10)}
                   </td>
                   <td>
-                    {absence.endDate}
+                    {absence.endDate.slice(0, 10)}
                   </td>
                   <td>
                     {absence.comment}
                   </td>
                   <td>
+                    {absence.absenceStatus}
+                  </td>
+                  <td>
                     <ButtonGroup>
-                      <Button color="warning">
+                      <Button color="warning pt-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                              fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                           <path
@@ -105,7 +120,7 @@ function App() {
                                 d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                         </svg>
                       </Button>
-                      <Button color="danger">
+                      <Button color="danger pt-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                              fill="currentColor" className="bi bi-x-circle" viewBox="0 0 16 16">
                           <path
@@ -114,7 +129,7 @@ function App() {
                               d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                         </svg>
                       </Button>
-                      <Button color="success">
+                      <Button color="success pt-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                              fill="currentColor" className="bi bi-check2-square" viewBox="0 0 16 16">
                           <path
@@ -134,7 +149,7 @@ function App() {
       <div className="container my-5">
         <div className="col">
           <h2>Absenzformular</h2>
-          <Form action={processFormData}>
+          <Form onSubmit={handleFormData}>
             <FormGroup row>
               <Label
                   for="employeeName"
