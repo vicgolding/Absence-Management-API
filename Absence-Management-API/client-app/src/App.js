@@ -7,16 +7,40 @@ function App() {
   const [ absences, setAbsences ] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5013/api/absence-requests")
+    fetch("https://localhost:5013/api/absence-requests")
         .then(response => response.json())
         .then((data) => setAbsences(data))
         .catch(err => console.error("API Error:", err));
   }, []);
   
+  function processFormData(formData) {
+    const employeeName = formData.get("employeeName");
+    const absenceType = formData.get("selectAbsenceType");
+    const startDate = formData.get("startDate");
+    const endDate = formData.get("endDate");
+    const startDateYear = startDate.slice(0, 4);
+    const startDateMonth = startDate.slice(5, 7);
+    const startDateDay = startDate.slice(8, 10);
+    const endDateYear = endDate.slice(0, 4);
+    const endDateMonth = endDate.slice(5, 7);
+    const endDateDay = endDate.slice(8, 10);
+    const comments = formData.get("comments");
+    const data = JSON.stringify(
+        {
+          employeeName: employeeName,
+          absenceType: absenceType,
+          startDate: `${startDateYear}-${startDateMonth}-${startDateDay}T00:00:00`,
+          endDate: `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`,
+          comments: comments
+        }
+    ); 
+    console.log(data);
+  }
+  
   return (
     <div className="App">
       <div className="container my-5">
-        <div className="col test">
+        <div className="col">
           <h2>Absenzübersicht</h2>
           <Table
               bordered
@@ -110,7 +134,7 @@ function App() {
       <div className="container my-5">
         <div className="col">
           <h2>Absenzformular</h2>
-          <Form>
+          <Form action={processFormData}>
             <FormGroup row>
               <Label
                   for="employeeName"
@@ -123,8 +147,6 @@ function App() {
                     id="employeeName"
                     name="employeeName"
                     placeholder="Name eingeben"
-                    //onChange={this.onChange}
-                    //value={this.state.employeeName === '' ? '' : this.state.employeeName}
                 />
               </Col>
             </FormGroup>
@@ -140,13 +162,11 @@ function App() {
                     id="selectAbsenceType"
                     name="selectAbsenceType"
                     type="select"
-                    //onChange={this.onChange}
-                    //value={this.state.absenceType === '' ? '' : this.state.absenceType}
                 >
-                  <option>Urlaub</option>
-                  <option>Krankheit</option>
-                  <option>Training</option>
-                  <option>Anderes</option>
+                  <option value={1}>Urlaub</option>
+                  <option value={2}>Krankheit</option>
+                  <option value={3}>Training</option>
+                  <option value={4}>Anderes</option>
                 </Input>
               </Col>
             </FormGroup>
@@ -162,9 +182,7 @@ function App() {
                     id="startDate"
                     name="startDate"
                     placeholder="date placeholder"
-                    type="date"
-                    //onChange={this.onChange}
-                    //value={this.state.startDate === '' ? '' : this.state.startDate}                                
+                    type="date"                     
                 />
               </Col>
             </FormGroup>
@@ -181,8 +199,6 @@ function App() {
                     name="endDate"
                     placeholder="date placeholder"
                     type="date"
-                    //onChange={this.onChange}
-                    //value={this.state.endDate === '' ? '' : this.state.endDate}
                 />
               </Col>
             </FormGroup>
@@ -197,9 +213,7 @@ function App() {
                 <Input
                     id="comments"
                     name="comments"
-                    type="textarea"
-                    //onChange={this.onChange}
-                    //value={this.state.comments === '' ? '' : this.state.comments}                                
+                    type="textarea"                     
                 />
               </Col>
             </FormGroup>
