@@ -5,20 +5,22 @@ namespace Absence_Management_API.Domain.Entities;
 public class AbsenceRequest
 {
     public Guid Id { get; private set; }
-    public int EmployeeId { get; private set; }
+    // public int EmployeeId { get; private set; }
+    public string EmployeeName { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
     public AbsenceStatus AbsenceStatus { get; private set; } 
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
     public string Comment { get; private set; }
 
-    public AbsenceRequest(Guid id, int employeeId, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate,
+    public AbsenceRequest(Guid id, string employeeName, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate,
         string? comment = null)
     {
         Id = Guid.NewGuid();
-        EmployeeId = employeeId;
+        // TODO: EmployeeId = employeeId;
+        EmployeeName = employeeName;
         AbsenceType = absenceType;
-        AbsenceStatus = 0;
+        AbsenceStatus = absenceStatus;
         // TODO: format from React
         StartDate = startDate;
         EndDate =  endDate;
