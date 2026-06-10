@@ -8,27 +8,28 @@ public class AbsenceRequest
     public int EmployeeId { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
     public AbsenceStatus AbsenceStatus { get; private set; } 
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public DateTime StartDate { get; private set; }
+    public DateTime EndDate { get; private set; }
     public string Comment { get; private set; }
 
     public AbsenceRequest(Guid id, int employeeId, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate,
-        string comment = null)
+        string? comment = null)
     {
         Id = Guid.NewGuid();
         EmployeeId = employeeId;
         AbsenceType = absenceType;
         AbsenceStatus = 0;
-        StartDate = new DateTime(2026, 6, 6);
-        EndDate =  new DateTime(2026, 6, 7);
-        Comment = "Lorem ipsum";
+        // TODO: format from React
+        StartDate = startDate;
+        EndDate =  endDate;
+        Comment = "";
     }
     
     public void ApproveRequest()
     {
         try
         {
-            if ( StartDate >= EndDate || EndDate <= StartDate || AbsenceStatus != 0 )
+            if ( StartDate >= EndDate || EndDate <= StartDate || AbsenceStatus != AbsenceStatus.Pending )
             {
                 throw new Exception();
             }
@@ -43,7 +44,7 @@ public class AbsenceRequest
     {
         try
         {
-            if (StartDate >= EndDate || EndDate <= StartDate || AbsenceStatus != 0)
+            if (StartDate >= EndDate || EndDate <= StartDate || AbsenceStatus != AbsenceStatus.Pending)
             {
                 throw new Exception();
             }
