@@ -40,9 +40,9 @@ using (var scope = app.Services.CreateScope())
     if (!db.AbsenceRequests.Any())
     {
         db.AbsenceRequests.AddRange(
-            new AbsenceRequest(Guid.NewGuid(), "Leia Organa", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4)),
-            new AbsenceRequest(Guid.NewGuid(), "Tommy Vercetti", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4)),
-            new AbsenceRequest(Guid.NewGuid(), "Diana Prince", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4))
+            new AbsenceRequest("Leia Organa", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4)),
+            new AbsenceRequest("Tommy Vercetti", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4)),
+            new AbsenceRequest("Diana Prince", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4))
         );
         db.SaveChanges();
         Console.WriteLine("Seed of mock data successful.");

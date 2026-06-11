@@ -13,7 +13,7 @@ public class AbsenceRequest
     public DateTime EndDate { get; private set; }
     public string Comment { get; private set; }
 
-    public AbsenceRequest(Guid id, string employeeName, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate,
+    public AbsenceRequest(string employeeName, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate,
         string? comment = null)
     {
         Id = Guid.NewGuid();
