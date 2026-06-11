@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import './App.css';
 import './bootstrap.min.css';
-import { Col, Table, Button, ButtonGroup, ListGroup, ListGroupItem, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Table, Button, ButtonGroup, Form, FormGroup, Label, Input } from 'reactstrap';
 
 function App() {
   const [ absences, setAbsences ] = useState([]);
@@ -17,6 +17,18 @@ function App() {
     e.preventDefault();
     const formData = new FormData(e.target);
     console.log(formData);
+    /* TODO: format dates
+    const startDate = formData.get("startDate");
+    const endDate = formData.get("endDate");
+    const startDateYear = startDate.slice(0, 4);
+    const startDateMonth = startDate.slice(5, 7);
+    const startDateDay = startDate.slice(8, 10);
+    const endDateYear = endDate.slice(0, 4);
+    const endDateMonth = endDate.slice(5, 7);
+    const endDateDay = endDate.slice(8, 10);
+    const processedStartDate = `${startDateYear}-${startDateMonth}-${startDateDay}T00:00:00`;
+    const processedEndDate = `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`;  
+    */
     try {
       const response = await fetch("https://localhost:5013/api/absence-requests", {
         method: 'POST',
@@ -29,21 +41,6 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  }
-  
-  function processFormData(formData) {
-    const startDate = formData.get("startDate");
-    const endDate = formData.get("endDate");
-    const startDateYear = startDate.slice(0, 4);
-    const startDateMonth = startDate.slice(5, 7);
-    const startDateDay = startDate.slice(8, 10);
-    const endDateYear = endDate.slice(0, 4);
-    const endDateMonth = endDate.slice(5, 7);
-    const endDateDay = endDate.slice(8, 10);
-    const processedStartDate = `${startDateYear}-${startDateMonth}-${startDateDay}T00:00:00`;
-    const processedEndDate = `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`;
-    console.log(processedStartDate);
-    console.log(processedEndDate)
   }
   
   return (
