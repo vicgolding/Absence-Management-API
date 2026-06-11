@@ -1,9 +1,9 @@
 namespace Absence_Management_API.Domain.Entities;
 
-public class Employee
+public class Employee(string firstName, string lastName, string email)
 {
-    public Guid Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
+    public readonly Guid Id = Guid.NewGuid();
+    public readonly string FirstName = firstName;
+    public readonly string LastName = lastName;
+    public readonly string Email = email;
 }
