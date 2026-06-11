@@ -18,13 +18,37 @@ public class AbsenceRequestsController : ControllerBase
     
     // GET api/absence-requests
     [HttpGet]
-    public Task<IEnumerable<AbsenceRequest>> GetAllAsync()
+    public Task<List<AbsenceRequest>> GetAllAsync()
     {
         return _absenceRepository.GetAllAsync();
     }
     
-    // TODO: GET api/absence-requests/{id}
+    // GET api/absence-requests/{employeeName}
+    [HttpGet("{employeeName}")]
+    public async Task<ActionResult<AbsenceRequest>> GetRequestByEmployeeName(String employeeName)
+    {
+        var request = await _absenceRepository.GetRequestByEmployeeName(employeeName);
+        if (request == null)
+        {
+            Console.WriteLine("not found");
+            return NotFound();
+        }
+        return Ok(request);
+    }
     
+    /* TODO: GET api/absence-requests/{id}
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AbsenceRequest>> GetRequestById(Guid id)
+    {
+        var request = await _absenceRepository.GetRequestById(id);
+        if (request == null)
+        {
+            Console.WriteLine("not found");
+            return NotFound();
+        }
+        return Ok(request);
+    }
+    */
     // TODO: POST api/absence-requests
     
     // TODO: PUT api/absence-requests/{id}

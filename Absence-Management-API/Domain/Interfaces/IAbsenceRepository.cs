@@ -1,12 +1,12 @@
 using Absence_Management_API.Domain.Entities;
-
 namespace Absence_Management_API.Domain.Interfaces;
 
 public interface IAbsenceRepository
 {
-    Task AddAsync(AbsenceRequest request);
-    Task<IEnumerable<AbsenceRequest>> GetAllAsync();
-    // TODO: Task<AbsenceRequest?> FindAsync(Guid id);
-    // TODO: Task<AbsenceRequest?> RemoveAsync(Guid id);
+    Task<List<AbsenceRequest>> GetAllAsync();
+    Task<AbsenceRequest?> GetRequestByEmployeeName(string employeeName);
+    // TODO: Task<AbsenceRequest?> GetRequestById(Guid id);
+    // TODO: Task AddAsync(AbsenceRequest request);
     // TODO: Task<AbsenceRequest?> UpdateAsync(AbsenceRequest request);
+    // TODO: Task<AbsenceRequest?> RemoveAsync(Guid id);
 }
