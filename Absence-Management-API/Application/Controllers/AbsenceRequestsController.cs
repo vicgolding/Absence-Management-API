@@ -49,7 +49,18 @@ public class AbsenceRequestsController : ControllerBase
         return Ok(request);
     }
     */
-    // TODO: POST api/absence-requests
+    // POST api/absence-requests
+    [HttpPost]
+    public async Task<ActionResult<AbsenceRequest>> Post([FromBody] AbsenceRequest request)
+    {
+        if (request is null)
+        {
+            return BadRequest();
+        }
+
+        await _absenceRepository.AddAsync(request);
+        return Created($"/api/absence-requests/{request.Id}", request);
+    }
     
     // TODO: PUT api/absence-requests/{id}
 }

@@ -28,10 +28,11 @@ public class AbsenceRepository : IAbsenceRepository
         return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
     }
     */
-    /* TODO:
-    public Task AddAsync(AbsenceRequest request)
+
+    public async Task AddAsync(AbsenceRequest request)
     {
-        return Task.CompletedTask;
+        _context.AbsenceRequests.Add(request);
+        await _context.SaveChangesAsync();
     }
-    */
+
 }
