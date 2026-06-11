@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Absence_Management_API.Domain.Entities;
 using Absence_Management_API.Domain.Interfaces;
-using Absence_Management_API.Infrastructure;
 
 namespace Absence_Management_API.Application.Controllers;
 
 [Produces("application/json")]
-[Route("api/[controller]")]
+[Route("api/absence-requests")]
 [ApiController]
 [EnableCors("AllowReactApp")]
 public class AbsenceRequestsController : ControllerBase

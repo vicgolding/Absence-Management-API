@@ -62,9 +62,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Hello World!");
-app.MapGet("/api/absence-requests", async (ApplicationDbContext db) =>
-    await db.AbsenceRequests.ToListAsync());
-
 // Start web server and begin listening to requests
 app.Run();
