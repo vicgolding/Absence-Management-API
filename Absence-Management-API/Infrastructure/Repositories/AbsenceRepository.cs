@@ -3,14 +3,9 @@ using Absence_Management_API.Domain.Interfaces;
 using Absence_Management_API.Domain.Entities;
 namespace Absence_Management_API.Infrastructure.Repositories;
 
-public class AbsenceRepository : IAbsenceRepository
+public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepository
 {
-    private readonly ApplicationDbContext _context;
-    
-    public AbsenceRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private readonly ApplicationDbContext _context = context;
     
     public async Task<List<AbsenceRequest>> GetAllAsync()
     {
@@ -22,8 +17,7 @@ public class AbsenceRepository : IAbsenceRepository
         return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.EmployeeName == employeeName);
     }
     
-    /* TODO:
-    public async Task<AbsenceRequest?> GetRequestById(Guid id)
+    /* TODO: public async Task<AbsenceRequest?> GetRequestById(Guid id)
     {
         return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
     }

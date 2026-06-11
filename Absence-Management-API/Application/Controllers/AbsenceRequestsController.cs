@@ -9,12 +9,9 @@ namespace Absence_Management_API.Application.Controllers;
 [Route("api/absence-requests")]
 [ApiController]
 [EnableCors("AllowReactApp")]
-public class AbsenceRequestsController : ControllerBase
+public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : ControllerBase
 {
-    private readonly IAbsenceRepository _absenceRepository;
-    
-    public AbsenceRequestsController(IAbsenceRepository absenceRepository) =>
-        _absenceRepository = absenceRepository;
+    private readonly IAbsenceRepository _absenceRepository = absenceRepository;
     
     // GET api/absence-requests
     [HttpGet]
