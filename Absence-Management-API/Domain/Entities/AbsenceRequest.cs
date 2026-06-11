@@ -6,25 +6,32 @@ public class AbsenceRequest
 {
     public Guid Id { get; private set; }
     // public int EmployeeId { get; private set; }
+    // TODO: Limit EmployeeName string length
     public string EmployeeName { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
     public AbsenceStatus AbsenceStatus { get; private set; } 
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
-    public string Comment { get; private set; }
+    // TODO: Limit Comment string length
+    // TODO: auto-property accessor 'Comment.get' is never used
+    public string? Comment { get; private set; }
 
-    public AbsenceRequest(string employeeName, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate,
-        string? comment = null)
+    /*
+     * TODO: Convert into primary constructor
+     * Warning: Primary constructor was not suitable and had parameters that could not be bound to properties of the type.
+     * Cannot bind 'employeeName', 'absenceType', 'absenceStatus', 'startDate', 'endDate', 'comment'
+     * Note that only mapped properties can be bound to constructor parameters. Navigations to related entities, including references to owned types, cannot be bound.
+    */
+    public AbsenceRequest(string employeeName, AbsenceType absenceType, AbsenceStatus absenceStatus, DateTime startDate, DateTime endDate, string? comment)
     {
         Id = Guid.NewGuid();
         // TODO: EmployeeId = employeeId;
         EmployeeName = employeeName;
         AbsenceType = absenceType;
         AbsenceStatus = absenceStatus;
-        // TODO: format from React
         StartDate = startDate;
         EndDate =  endDate;
-        Comment = "";
+        Comment = comment;
     }
     
     public void ApproveRequest()
@@ -38,6 +45,7 @@ public class AbsenceRequest
         }
         catch (Exception e)
         {
+            // TODO: argument 'e.Message' is not used in format string
             Console.WriteLine("An exception has occurred!", e.Message);
         }
     }
@@ -53,6 +61,7 @@ public class AbsenceRequest
         }
         catch (Exception e)
         {
+            // TODO: argument 'e.Message' is not used in format string
             Console.WriteLine("An exception has occurred!", e.Message);   
         }
     }

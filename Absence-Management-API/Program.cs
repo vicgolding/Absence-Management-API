@@ -22,6 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
+        // TODO: parameter 'builder' hides outer local variable with the same name
         builder => builder
             .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
@@ -40,9 +41,9 @@ using (var scope = app.Services.CreateScope())
     if (!db.AbsenceRequests.Any())
     {
         db.AbsenceRequests.AddRange(
-            new AbsenceRequest("Leia Organa", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4)),
-            new AbsenceRequest("Tommy Vercetti", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4)),
-            new AbsenceRequest("Diana Prince", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4))
+            new AbsenceRequest("Leia Organa", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), ""),
+            new AbsenceRequest("Tommy Vercetti", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), ""),
+            new AbsenceRequest("Diana Prince", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), "")
         );
         db.SaveChanges();
         Console.WriteLine("Seed of mock data successful.");
