@@ -46,7 +46,16 @@ using (var scope = app.Services.CreateScope())
             new AbsenceRequest("Diana Prince", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), "")
         );
         db.SaveChanges();
+        var query = from r in db.AbsenceRequests
+            orderby r.EmployeeName
+            select r;
         Console.WriteLine("Seed of mock data successful.");
+        foreach (var r in query)
+        {
+            Console.WriteLine($"{r.EmployeeName} requests absence with ID number {r.Id}");
+        }
+        Console.WriteLine("Press a key to exit...");
+        Console.ReadKey();
     }
 }
 
