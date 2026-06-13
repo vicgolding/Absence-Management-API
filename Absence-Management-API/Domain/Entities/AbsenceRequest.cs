@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Absence_Management_API.Domain.Enums;
 
 namespace Absence_Management_API.Domain.Entities;
@@ -6,13 +7,13 @@ public class AbsenceRequest
 {
     public Guid Id { get; private set; }
     // public int EmployeeId { get; private set; }
-    // TODO: Limit EmployeeName string length
+    [StringLength(100, ErrorMessage = "The employee name field cannot exceed 100 characters. ")]
     public string EmployeeName { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
     public AbsenceStatus AbsenceStatus { get; private set; } 
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
-    // TODO: Limit Comment string length
+    [StringLength(100, ErrorMessage = "The comment field cannot exceed 100 characters. ")]
     // TODO: auto-property accessor 'Comment.get' is never used
     public string? Comment { get; private set; }
 
