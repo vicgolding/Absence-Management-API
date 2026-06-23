@@ -30,11 +30,13 @@ function App() {
     const processedEndDate = `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`;  
     */
     try {
-      const response = await fetch("https://localhost:5013/api/absence-requests", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://localhost:5013/api/absence-requests", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      );
       if (response.status === 201) {
         console.log("success");
       }    

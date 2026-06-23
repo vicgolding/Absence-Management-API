@@ -14,13 +14,19 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
 
     public async Task<AbsenceRequest?> GetRequestByEmployeeName(String employeeName)
     {
-        return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.EmployeeName == employeeName);
+        return await _context.AbsenceRequests.FirstOrDefaultAsync(
+            x => x.EmployeeName == employeeName
+        );
     }
     
     /* TODO: public async Task<AbsenceRequest?> GetRequestById(Guid id)
     {
         return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
     }
+    */
+    
+    /* TODO: public async Task<AbsenceRequest?> GetRequestByEmployeeId(int employeeId)
+    {} 
     */
 
     public async Task AddAsync(AbsenceRequest request)

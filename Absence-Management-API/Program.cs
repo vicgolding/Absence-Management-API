@@ -41,12 +41,34 @@ using (var scope = app.Services.CreateScope())
     if (!db.AbsenceRequests.Any())
     {
         db.AbsenceRequests.AddRange(
-            new AbsenceRequest("Leia Organa", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), ""),
-            new AbsenceRequest("Tommy Vercetti", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), ""),
-            new AbsenceRequest("Diana Prince", 0, 0, new DateTime(1970, 1, 1), new DateTime(1970, 5, 4), "")
+            new AbsenceRequest(
+                "Leia Organa",
+                0,
+                0,
+                new DateTime(1970, 1, 1),
+                new DateTime(1970, 5, 4),
+                ""
+            ),
+            new AbsenceRequest(
+                "Tommy Vercetti",
+                0, 
+                0, 
+                new DateTime(1970, 1, 1), 
+                new DateTime(1970, 5, 4),
+                ""
+            ),
+            new AbsenceRequest(
+                "Diana Prince", 
+                0, 
+                0, 
+                new DateTime(1970, 1, 1), 
+                new DateTime(1970, 5, 4), 
+                ""
+            )
         );
         db.SaveChanges();
-        var query = from r in db.AbsenceRequests
+        var query 
+            = from r in db.AbsenceRequests
             orderby r.EmployeeName
             select r;
         Console.WriteLine("Seed of mock data successful.");

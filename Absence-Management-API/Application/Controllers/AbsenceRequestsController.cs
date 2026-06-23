@@ -22,7 +22,9 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
     
     // GET api/absence-requests/{employeeName}
     [HttpGet("{employeeName}")]
-    public async Task<ActionResult<AbsenceRequest>> GetRequestByEmployeeName(String employeeName)
+    public async Task<ActionResult<AbsenceRequest>> GetRequestByEmployeeName(
+        String employeeName
+    )
     {
         var request = await _absenceRepository.GetRequestByEmployeeName(employeeName);
         if (request == null)
@@ -33,8 +35,8 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         return Ok(request);
     }
     
-    /* TODO: GET api/absence-requests/{id}
-    [HttpGet("{id}")]
+    /* TODO: GET api/absence-requests/{absence-id}
+    [HttpGet("{absence-id}")]
     public async Task<ActionResult<AbsenceRequest>> GetRequestById(Guid id)
     {
         var request = await _absenceRepository.GetRequestById(id);
@@ -46,9 +48,20 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         return Ok(request);
     }
     */
+    
+    /* TODO: GET api/absence-requests/{employee-id}
+     [HttpGet("{employee-id}")]
+     public async Task<ActionResult<AbsenceRequest>> GetRequestByEmployeeId(
+        int employeeId
+    ) 
+     {}
+     */
+    
     // POST api/absence-requests
     [HttpPost]
-    public async Task<ActionResult<AbsenceRequest>> Post([FromBody] AbsenceRequest request)
+    public async Task<ActionResult<AbsenceRequest>> Post(
+        [FromBody] AbsenceRequest request
+    )
     {
         if (request is null)
         {
