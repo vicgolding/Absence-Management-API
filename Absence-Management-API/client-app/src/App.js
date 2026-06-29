@@ -12,34 +12,35 @@ function App() {
         .then((data) => setAbsences(data))
         .catch(err => console.error("API Error:", err));
   }, []);
-  
-  async function handleFormData(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    console.log(formData);
-    /* TODO: format dates
+
+  async function processFormData(formData) {
+    const employeeName = formData.get("employeeName");
+    const absenceType = parseFloat(formData.get("selectAbsenceType"));
     const startDate = formData.get("startDate");
     const endDate = formData.get("endDate");
-    const startDateYear = startDate.slice(0, 4);
-    const startDateMonth = startDate.slice(5, 7);
-    const startDateDay = startDate.slice(8, 10);
-    const endDateYear = endDate.slice(0, 4);
-    const endDateMonth = endDate.slice(5, 7);
-    const endDateDay = endDate.slice(8, 10);
-    const processedStartDate = `${startDateYear}-${startDateMonth}-${startDateDay}T00:00:00`;
-    const processedEndDate = `${endDateYear}-${endDateMonth}-${endDateDay}T00:00:00`;  
-    */
+    const comments = formData.get("comments");
+    const data = JSON.stringify(
+        {
+          employeeName: employeeName,
+          absenceType: absenceType,
+          startDate: startDate,
+          endDate: endDate,
+          comments: comments
+        }
+    );
+    console.log(data);
     try {
       const response = await fetch(
-        "https://localhost:5013/api/absence-requests", {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        }
+          "https://localhost:5013/api/absence-requests", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: data,
+          }
       );
+      console.log(await response.json());
       if (response.status === 201) {
         console.log("success");
-      }    
+      }
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +149,7 @@ function App() {
       <div className="container my-5">
         <div className="col">
           <h2>Absenzformular</h2>
-          <Form onSubmit={handleFormData}>
+          <Form action={processFormData}>
             <FormGroup row>
               <Label
                   for="employeeName"
