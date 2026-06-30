@@ -20,23 +20,8 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         return _absenceRepository.GetAllAsync();
     }
     
-    // GET api/absence-requests/{employeeName}
-    [HttpGet("{employeeName}")]
-    public async Task<ActionResult<AbsenceRequest>> GetRequestByEmployeeName(
-        String employeeName
-    )
-    {
-        var request = await _absenceRepository.GetRequestByEmployeeName(employeeName);
-        if (request == null)
-        {
-            Console.WriteLine("not found");
-            return NotFound();
-        }
-        return Ok(request);
-    }
-    
-    /* TODO: GET api/absence-requests/{absence-id}
-    [HttpGet("{absence-id}")]
+    // GET api/absence-requests/{id}
+    [HttpGet("{id}")]
     public async Task<ActionResult<AbsenceRequest>> GetRequestById(Guid id)
     {
         var request = await _absenceRepository.GetRequestById(id);
@@ -47,7 +32,6 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         }
         return Ok(request);
     }
-    */
     
     /* TODO: GET api/absence-requests/{employee-id}
      [HttpGet("{employee-id}")]

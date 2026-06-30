@@ -19,11 +19,10 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
         );
     }
     
-    /* TODO: public async Task<AbsenceRequest?> GetRequestById(Guid id)
+    public async Task<AbsenceRequest?> GetRequestById(Guid id)
     {
         return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
     }
-    */
     
     /* TODO: public async Task<AbsenceRequest?> GetRequestByEmployeeId(int employeeId)
     {} 
