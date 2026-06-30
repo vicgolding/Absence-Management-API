@@ -20,8 +20,10 @@ function App() {
         id: absence.id,
         employeeName: absence.employeeName,
         absenceType: absence.absenceType,
+        absenceStatus: absence.absenceStatus,
         startDate: absence.startDate,
-        endDate: absence.endDate
+        endDate: absence.endDate,
+        comment: absence.comment
       }
     ]);
   }
@@ -31,15 +33,15 @@ function App() {
     const absenceType = parseFloat(formData.get("selectAbsenceType"));
     const startDate = formData.get("startDate");
     const endDate = formData.get("endDate");
-    const comments = formData.get("comments");
+    const comment = formData.get("comment");
     const data = JSON.stringify(
         {
           employeeName: employeeName,
           absenceType: absenceType,
-          // TODO: absenceStatus,
+          absenceStatus: 0,
           startDate: startDate,
           endDate: endDate,
-          comments: comments
+          comment: comment
         }
     );
     try {
@@ -64,7 +66,7 @@ function App() {
     <div className="App">
       <div className="container my-5">
         <div className="col">
-          <h2>Absenzübersicht</h2>
+          <h2 className="text-center mb-5">Absenzübersicht</h2>
           <Table
               bordered
               hover
@@ -162,7 +164,7 @@ function App() {
     </div>
       <div className="container my-5">
         <div className="col">
-          <h2>Absenzformular</h2>
+          <h2 className="text-center mb-5">Absenzformular</h2>
           <Form action={processFormData}>
             <FormGroup row>
               <Label
@@ -233,15 +235,15 @@ function App() {
             </FormGroup>
             <FormGroup row>
               <Label
-                  for="comments"
+                  for="comment"
                   sm={2}
               >
                 Kommentare
               </Label>
               <Col sm={10}>
                 <Input
-                    id="comments"
-                    name="comments"
+                    id="comment"
+                    name="comment"
                     type="textarea"                     
                 />
               </Col>

@@ -47,7 +47,7 @@ using (var scope = app.Services.CreateScope())
                 0,
                 new DateTime(1970, 1, 1),
                 new DateTime(1970, 5, 4),
-                ""
+                "Doggo ipsum shoober pupperino pats smol ruff fat boi maximum borkdrive."
             ),
             new AbsenceRequest(
                 "Tommy Vercetti",
@@ -55,7 +55,7 @@ using (var scope = app.Services.CreateScope())
                 0, 
                 new DateTime(1970, 1, 1), 
                 new DateTime(1970, 5, 4),
-                ""
+                "heckin good boys and girls pupper big ol pupper doge"
             ),
             new AbsenceRequest(
                 "Diana Prince", 
@@ -63,7 +63,7 @@ using (var scope = app.Services.CreateScope())
                 0, 
                 new DateTime(1970, 1, 1), 
                 new DateTime(1970, 5, 4), 
-                ""
+                "Borkf wow such tempt heckin bork big ol pupper shoober tungg"
             )
         );
         db.SaveChanges();
