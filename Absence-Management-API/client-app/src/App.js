@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import './bootstrap.min.css';
 import { Col, Table, Button, ButtonGroup, Form, FormGroup, Label, Input } from 'reactstrap';
@@ -13,6 +13,19 @@ function App() {
         .catch(err => console.error("API Error:", err));
   }, []);
 
+  function addRequestToState(absence) {
+    setAbsences([
+        ...absences,
+      {
+        id: absence.id,
+        employeeName: absence.employeeName,
+        absenceType: absence.absenceType,
+        startDate: absence.startDate,
+        endDate: absence.endDate
+      }
+    ]);
+  }
+  
   async function processFormData(formData) {
     const employeeName = formData.get("employeeName");
     const absenceType = parseFloat(formData.get("selectAbsenceType"));
@@ -23,12 +36,12 @@ function App() {
         {
           employeeName: employeeName,
           absenceType: absenceType,
+          // TODO: absenceStatus,
           startDate: startDate,
           endDate: endDate,
           comments: comments
         }
     );
-    console.log(data);
     try {
       const response = await fetch(
           "https://localhost:5013/api/absence-requests", {
@@ -37,9 +50,10 @@ function App() {
             body: data,
           }
       );
-      console.log(await response.json());
+      // TODO: setTimeout()
       if (response.status === 201) {
         console.log("success");
+        addRequestToState(await response.json());
       }
     } catch (error) {
       console.log(error);
