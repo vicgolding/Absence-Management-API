@@ -2,10 +2,11 @@
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import '../App.css';
 import '../bootstrap.min.css';
+import handleSubmit from '../App.js';
 
 const RequestForm = () =>
     <Form
-        // action={handleSubmit}
+        action={handleSubmit}
     >
         <FormGroup row>
             <Label
