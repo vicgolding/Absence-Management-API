@@ -17,7 +17,7 @@ function App() {
 
   function addRequestToState(absence) {
     setAbsences([
-        ...absences,
+      ...absences,
       {
         id: absence.id,
         employeeName: absence.employeeName,
@@ -30,29 +30,7 @@ function App() {
     ]);
   }
   
-  async function updateRequest(event) {
-    const requestId = event.target.dataset.id;
-    try {
-      const response = await fetch(`${path}/${requestId}`);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  
-  async function deleteRequest(event) {
-    const requestId = event.target.dataset.id;
-    try {
-      const response = await fetch(`${path}/${requestId}`);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  
-  async function processFormData(formData) {
+  async function handleSubmit(formData) {
     const employeeName = formData.get("employeeName");
     const absenceType = parseFloat(formData.get("selectAbsenceType"));
     const startDate = formData.get("startDate");
@@ -85,6 +63,42 @@ function App() {
       console.log(error);
     }
   }
+  
+  const currentRequests = absences.map((absence) => (
+        <tr>
+          <th scope="row">{absence.id}</th>
+          <td>{absence.employeeName}</td>
+          <td>{absence.absenceType}</td>
+          <td>{absence.startDate.slice(0, 10)}</td>
+          <td>{absence.endDate.slice(0, 10)}</td>
+          <td>{absence.comment}</td>
+          <td>{absence.absenceStatus}</td>
+          <td>
+            <ButtonGroup>
+              <Button
+                data-id={absence.id}
+                color="success"
+                onClick={approveRequest}
+              >
+                Approve
+              </Button>
+              <Button
+                  data-id={absence.id}
+                  color="warning"
+                  onClick={denyRequest}
+              >
+                Deny
+              </Button>
+              <Button
+                  data-id={absence.id}
+                  color="danger"
+                  onClick={deleteRequest}>
+                Delete
+              </Button>
+            </ButtonGroup>
+          </td>
+        </tr>
+  ));
   
   return (
     <div className="App">
@@ -126,135 +140,7 @@ function App() {
             </tr>
             </thead>
             <tbody>
-            {absences.map((absence) => (
-                <tr>
-                  <th scope="row">
-                    {absence.id}
-                  </th>
-                  <td>
-                    <Label
-                        for="employeeName"
-                        hidden
-                    >
-                      Mitarbeiter:in
-                    </Label>
-                    <Col sm={10}>
-                      <Input
-                          id="employeeName"
-                          name="employeeName"
-                          placeholder="Name eingeben"
-                          value={absence.employeeName}
-                      />
-                    </Col>
-                  </td>
-                  <td>
-                    <Label
-                        for="selectAbsenceType"
-                        hidden
-                    >
-                      Abwesenheitstyp
-                    </Label>
-                    <Col sm={10}>
-                      <Input
-                          id="selectAbsenceType"
-                          name="selectAbsenceType"
-                          type="select"
-                          value={absence.absenceType}
-                      >
-                        <option value={0}>Urlaub</option>
-                        <option value={1}>Krankheit</option>
-                        <option value={2}>Training</option>
-                        <option value={3}>Anderes</option>
-                      </Input>
-                    </Col>
-                  </td>
-                  <td>
-                    <Label
-                        for="startDate"
-                        hidden
-                    >
-                      Startdatum
-                    </Label>
-                    <Col sm={10}>
-                      <Input
-                          id="startDate"
-                          name="startDate"
-                          placeholder="date placeholder"
-                          type="date"
-                          value={absence.startDate.slice(0, 10)}
-                      />
-                    </Col>
-                  </td>
-                  <td>
-                    <Label
-                        for="endDate"
-                        hidden
-                    >
-                      Enddatum
-                    </Label>
-                    <Col sm={10}>
-                      <Input
-                          id="endDate"
-                          name="endDate"
-                          placeholder="date placeholder"
-                          type="date"
-                          value={absence.endDate.slice(0, 10)}
-                      />
-                    </Col>
-                  </td>
-                  <td>
-                    <Label
-                        for="comment"
-                        hidden
-                    >
-                      Kommentare
-                    </Label>
-                    <Col sm={10}>
-                      <Input
-                          id="comment"
-                          name="comment"
-                          type="textarea"
-                          value={absence.comment}
-                      />
-                    </Col>
-                  </td>
-                  <td>
-                    <Label
-                        for="selectAbsenceStatus"
-                        hidden
-                    >
-                      Abwesenheitstyp
-                    </Label>
-                    <Col sm={10}>
-                      <Input
-                          id="selectAbsenceStatus"
-                          name="selectAbsenceStatus"
-                          type="select"
-                          value={absence.absenceStatus}
-                      >
-                        <option value={0}>Pendent</option>
-                        <option value={1}>Genehmigt</option>
-                        <option value={2}>Abgelehnt</option>
-                      </Input>
-                    </Col>
-                  </td>
-                  <td>
-                    <ButtonGroup>
-                      <Button 
-                          data-id={absence.id} 
-                          color="warning" 
-                          onClick={updateRequest}>
-                        Update
-                      </Button>
-                      <Button
-                          data-id={absence.id}
-                          color="danger"
-                          onClick={deleteRequest}>
-                        Delete</Button>
-                    </ButtonGroup>
-                  </td>
-                </tr>
-            ))}
+            {currentRequests}
             </tbody>
           </Table>
       </div>
@@ -262,7 +148,7 @@ function App() {
       <div className="container my-5">
         <div className="col">
           <h2 className="text-center mb-5">Absenzformular</h2>
-          <Form action={processFormData}>
+          <Form action={handleSubmit}>
             <FormGroup row>
               <Label
                   for="employeeName"
@@ -346,12 +232,14 @@ function App() {
               </Col>
             </FormGroup>
             <FormGroup row>
-              <Col sm={12}>
-                <Button
-                    block
-                    primary
-                >
-                  Submit
+              <Col sm={2}>
+                <Button primary>
+                  Neue Anfrage erstellen
+                </Button>
+              </Col>
+              <Col sm={2}>
+                <Button color="warning">
+                  Anfrage ändern
                 </Button>
               </Col>
             </FormGroup>
