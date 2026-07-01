@@ -63,6 +63,58 @@ function App() {
       console.log(error);
     }
   }
+
+  async function approveRequest(event) {
+    const requestId = event.target.dataset.id;
+    try {
+      const response = await fetch(
+          `${path}/${requestId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: { absenceStatus: 1 },
+          }
+      );
+      if (response.status === 201) {
+        console.log("successfully approved");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function denyRequest(event) {
+    const requestId = event.target.dataset.id;
+    try {
+      const response = await fetch(
+          `${path}/${requestId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: { absenceStatus: 2 },
+          }
+      );
+      if (response.status === 201) {
+        console.log("successfully denied");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function deleteRequest(event) {
+    const requestId = event.target.dataset.id;
+    try {
+      const response = await fetch(
+          `${path}/${requestId}`, {
+            method: 'DELETE'
+          }
+      );
+      if (response.status === 201) {
+        console.log("successfully deleted");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   
   const currentRequests = absences.map((absence) => (
         <tr>
