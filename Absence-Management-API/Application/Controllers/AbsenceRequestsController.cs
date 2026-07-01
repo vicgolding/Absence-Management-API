@@ -33,14 +33,6 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         return Ok(request);
     }
     
-    /* TODO: GET api/absence-requests/{employee-id}
-     [HttpGet("{employee-id}")]
-     public async Task<ActionResult<AbsenceRequest>> GetRequestByEmployeeId(
-        int employeeId
-    ) 
-     {}
-     */
-    
     // POST api/absence-requests
     [HttpPost]
     public async Task<ActionResult<AbsenceRequest>> Post(
@@ -56,5 +48,17 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         return Created($"/api/absence-requests/{request.Id}", request);
     }
     
-    // TODO: PUT api/absence-requests/{id}
+    // PUT api/absence-requests/{id}
+    [HttpPut("{id}")]
+    public async Task<ActionResult<AbsenceRequest>> UpdateRequestById(Guid id, [FromBody] AbsenceRequest request)
+    {
+        if (request == null)
+        {
+            Console.WriteLine("not found");
+            return NotFound();
+        }
+
+        await _absenceRepository.UpdateAsync(id, request);
+        return Accepted($"/api/absence-requests/{request.Id}", request);
+    }
 }

@@ -4,10 +4,9 @@ namespace Absence_Management_API.Domain.Interfaces;
 public interface IAbsenceRepository
 {
     Task<List<AbsenceRequest>> GetAllAsync();
-    Task<AbsenceRequest?> GetRequestByEmployeeName(string employeeName);
     Task<AbsenceRequest?> GetRequestById(Guid id);
     // TODO: Task<AbsenceRequest?> GetRequestByEmployeeId(int employeeId);
     Task AddAsync(AbsenceRequest request);
-    // TODO: Task<AbsenceRequest?> UpdateAsync(AbsenceRequest request);
+    Task<AbsenceRequest?> UpdateAsync(Guid id, AbsenceRequest request);
     // TODO: Task<AbsenceRequest?> RemoveAsync(Guid id);
 }

@@ -11,22 +11,11 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
     {
         return await _context.AbsenceRequests.ToListAsync();
     }
-
-    public async Task<AbsenceRequest?> GetRequestByEmployeeName(String employeeName)
-    {
-        return await _context.AbsenceRequests.FirstOrDefaultAsync(
-            x => x.EmployeeName == employeeName
-        );
-    }
     
     public async Task<AbsenceRequest?> GetRequestById(Guid id)
     {
         return await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
     }
-    
-    /* TODO: public async Task<AbsenceRequest?> GetRequestByEmployeeId(int employeeId)
-    {} 
-    */
 
     public async Task AddAsync(AbsenceRequest request)
     {
@@ -34,4 +23,11 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
         await _context.SaveChangesAsync();
     }
 
+    public async Task<AbsenceRequest?> UpdateAsync(Guid id, AbsenceRequest request)
+    {
+        var existingRequest = await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
+        existingRequest.AbsenceStatus = request.AbsenceStatus;
+        await _context.SaveChangesAsync();
+        return request;
+    }
 }

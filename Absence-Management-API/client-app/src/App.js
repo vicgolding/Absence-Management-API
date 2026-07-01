@@ -66,16 +66,36 @@ function App() {
 
   async function approveRequest(event) {
     const requestId = event.target.dataset.id;
+    const approvedStatus = 1;
+    const response = await fetch(
+        `${path}/${requestId}`
+    );
+    const initialRequest = await response.json();
+    const data = JSON.stringify(
+        {
+          id: initialRequest.id,
+          employeeName: initialRequest.employeeName,
+          absenceType: initialRequest.absenceType,
+          absenceStatus: approvedStatus,
+          startDate: initialRequest.startDate,
+          endDate: initialRequest.endDate,
+          comment: initialRequest.comment
+        } 
+    );
     try {
       const response = await fetch(
           `${path}/${requestId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: { absenceStatus: 1 },
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: data,
           }
       );
-      if (response.status === 201) {
-        console.log("successfully approved");
+      if (response.status === 202) {
+        console.log("change accepted");
+        updateRequestToState(await response.json(), approvedStatus);
       }
     } catch (error) {
       console.error(error);
@@ -84,16 +104,36 @@ function App() {
 
   async function denyRequest(event) {
     const requestId = event.target.dataset.id;
+    const deniedStatus = 2;
+    const response = await fetch(
+        `${path}/${requestId}`
+    );
+    const initialRequest = await response.json();
+    const data = JSON.stringify(
+        {
+          id: initialRequest.id,
+          employeeName: initialRequest.employeeName,
+          absenceType: initialRequest.absenceType,
+          absenceStatus: deniedStatus,
+          startDate: initialRequest.startDate,
+          endDate: initialRequest.endDate,
+          comment: initialRequest.comment
+        }
+    );
     try {
       const response = await fetch(
           `${path}/${requestId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: { absenceStatus: 2 },
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: data,
           }
       );
-      if (response.status === 201) {
-        console.log("successfully denied");
+      if (response.status === 202) {
+        console.log("change accepted");
+        updateRequestToState(await response.json(), deniedStatus);
       }
     } catch (error) {
       console.error(error);
@@ -287,11 +327,6 @@ function App() {
               <Col sm={2}>
                 <Button primary>
                   Neue Anfrage erstellen
-                </Button>
-              </Col>
-              <Col sm={2}>
-                <Button color="warning">
-                  Anfrage ändern
                 </Button>
               </Col>
             </FormGroup>

@@ -12,7 +12,7 @@ public class AbsenceRequest
     )]
     public string EmployeeName { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
-    public AbsenceStatus AbsenceStatus { get; private set; } 
+    public AbsenceStatus AbsenceStatus { get; set; }
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
     [StringLength(
