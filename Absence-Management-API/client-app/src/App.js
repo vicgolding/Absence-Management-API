@@ -88,7 +88,7 @@ function App() {
   
   return (
     <div className="App">
-      <div className="container my-5">
+      <div className="container-fluid px-5 my-5">
         <div className="col">
           <h2 className="text-center mb-5">Absenzübersicht</h2>
           <Table
@@ -132,22 +132,111 @@ function App() {
                     {absence.id}
                   </th>
                   <td>
-                    {absence.employeeName}
+                    <Label
+                        for="employeeName"
+                        hidden
+                    >
+                      Mitarbeiter:in
+                    </Label>
+                    <Col sm={10}>
+                      <Input
+                          id="employeeName"
+                          name="employeeName"
+                          placeholder="Name eingeben"
+                          value={absence.employeeName}
+                      />
+                    </Col>
                   </td>
                   <td>
-                    {absence.absenceType}
+                    <Label
+                        for="selectAbsenceType"
+                        hidden
+                    >
+                      Abwesenheitstyp
+                    </Label>
+                    <Col sm={10}>
+                      <Input
+                          id="selectAbsenceType"
+                          name="selectAbsenceType"
+                          type="select"
+                          value={absence.absenceType}
+                      >
+                        <option value={0}>Urlaub</option>
+                        <option value={1}>Krankheit</option>
+                        <option value={2}>Training</option>
+                        <option value={3}>Anderes</option>
+                      </Input>
+                    </Col>
                   </td>
                   <td>
-                    {absence.startDate.slice(0, 10)}
+                    <Label
+                        for="startDate"
+                        hidden
+                    >
+                      Startdatum
+                    </Label>
+                    <Col sm={10}>
+                      <Input
+                          id="startDate"
+                          name="startDate"
+                          placeholder="date placeholder"
+                          type="date"
+                          value={absence.startDate.slice(0, 10)}
+                      />
+                    </Col>
                   </td>
                   <td>
-                    {absence.endDate.slice(0, 10)}
+                    <Label
+                        for="endDate"
+                        hidden
+                    >
+                      Enddatum
+                    </Label>
+                    <Col sm={10}>
+                      <Input
+                          id="endDate"
+                          name="endDate"
+                          placeholder="date placeholder"
+                          type="date"
+                          value={absence.endDate.slice(0, 10)}
+                      />
+                    </Col>
                   </td>
                   <td>
-                    {absence.comment}
+                    <Label
+                        for="comment"
+                        hidden
+                    >
+                      Kommentare
+                    </Label>
+                    <Col sm={10}>
+                      <Input
+                          id="comment"
+                          name="comment"
+                          type="textarea"
+                          value={absence.comment}
+                      />
+                    </Col>
                   </td>
                   <td>
-                    {absence.absenceStatus}
+                    <Label
+                        for="selectAbsenceStatus"
+                        hidden
+                    >
+                      Abwesenheitstyp
+                    </Label>
+                    <Col sm={10}>
+                      <Input
+                          id="selectAbsenceStatus"
+                          name="selectAbsenceStatus"
+                          type="select"
+                          value={absence.absenceStatus}
+                      >
+                        <option value={0}>Pendent</option>
+                        <option value={1}>Genehmigt</option>
+                        <option value={2}>Abgelehnt</option>
+                      </Input>
+                    </Col>
                   </td>
                   <td>
                     <ButtonGroup>
@@ -202,10 +291,10 @@ function App() {
                     name="selectAbsenceType"
                     type="select"
                 >
-                  <option value={1}>Urlaub</option>
-                  <option value={2}>Krankheit</option>
-                  <option value={3}>Training</option>
-                  <option value={4}>Anderes</option>
+                  <option value={0}>Urlaub</option>
+                  <option value={1}>Krankheit</option>
+                  <option value={2}>Training</option>
+                  <option value={3}>Anderes</option>
                 </Input>
               </Col>
             </FormGroup>
