@@ -30,4 +30,12 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
         await _context.SaveChangesAsync();
         return request;
     }
+
+    public async Task<AbsenceRequest?> RemoveAsync(Guid id)
+    {
+        var existingRequest = await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
+        _context.Remove(existingRequest);
+        await _context.SaveChangesAsync();
+        return existingRequest;
+    }
 }

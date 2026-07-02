@@ -41,7 +41,7 @@ function App() {
             );
             // TODO: setTimeout()
             if (response.status === 201) {
-                console.log("success");
+                console.log("successfully added");
                 addRequestToState(await response.json());
             }
         } catch (error) {
@@ -69,20 +69,11 @@ function App() {
         
         async function updateStatus(event){
             const newStatus = parseInt(event.target.dataset.status);
-            const requestId = event.target.dataset.id;
+            const requestId = props.id;
             try {
                 const absenceRequest = absences.find(absence => absence.id === requestId);
                 if (absenceRequest) {
-                    if (newStatus === 3) {
-                        await fetch(`${path}/${requestId}`, {
-                            method: 'DELETE'
-                        })
-                            .then((response) => {
-                                if (response.status === 201) {
-                                    console.log("successfully deleted");
-                                }                                
-                            })
-                    } else if (newStatus === 1 || newStatus === 2) {
+                    if (newStatus === 1 || newStatus === 2) {
                         await fetch(`${path}/${requestId}`, {
                             method: 'PUT',
                             headers: {
@@ -101,7 +92,7 @@ function App() {
                         })
                             .then((response) => {
                                 if (response.status === 202) {
-                                    console.log("change accepted");
+                                    console.log("successfully updated");
                                     setStatus(newStatus);
                                 }
                             })
@@ -140,13 +131,6 @@ function App() {
                             >
                                 Deny
                             </Button>
-                            <Button
-                                data-id={props.id}
-                                data-status={3}
-                                color="danger"
-                                onClick={updateStatus}>
-                                Delete
-                            </Button>
                         </ButtonGroup>
                     </Col>                    
                 </Row>
@@ -155,16 +139,47 @@ function App() {
     }
 
     const Request = (absence, index) => {
-        const request = absence.absence;
+        const [ absenceRequest ] = useState(absence.absence);
+
+        async function handleRemoveRequest() {
+            try {
+                await fetch(`${path}/${absenceRequest.id}`, {
+                    method: 'DELETE'
+                })
+                    .then((response) => {
+                        if (response.status === 204) {
+                            console.log("successfully deleted");
+                            const updatedRequests = absences.filter(a => a.id !== absenceRequest.id);
+                            setAbsences(updatedRequests);
+                        }
+                    })
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        
         return (
             <tr key={index}>
-                <th scope="row">{request.id}</th>
-                <td>{request.employeeName}</td>
-                <td>{request.absenceType}</td>
-                <td>{request.startDate.slice(0, 10)}</td>
-                <td>{request.endDate.slice(0, 10)}</td>
-                <td>{request.comment}</td>
-                <AbsenceStatus status={request.absenceStatus} id={request.id} />
+                <th scope="row">{absenceRequest.id}</th>
+                <td>{absenceRequest.employeeName}</td>
+                <td>{absenceRequest.absenceType}</td>
+                <td>
+                    {absenceRequest.startDate.slice(0, 10)}
+                </td>
+                <td>
+                    {absenceRequest.endDate.slice(0, 10)}
+                </td>
+                <td>{absenceRequest.comment}</td>
+                <AbsenceStatus status={absenceRequest.absenceStatus} id={absenceRequest.id} />
+                <td>
+                    <Button
+                        data-id={absenceRequest.id}
+                        data-status={3}
+                        color="danger"
+                        onClick={handleRemoveRequest}>
+                        Delete
+                    </Button>
+                </td>
             </tr>
         )
     }

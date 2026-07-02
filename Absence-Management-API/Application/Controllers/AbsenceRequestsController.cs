@@ -61,4 +61,19 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         await _absenceRepository.UpdateAsync(id, request);
         return Accepted($"/api/absence-requests/{request.Id}", request);
     }
+    
+    // DELETE api/absence-requests/{id}
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<AbsenceRequest>> DeleteRequestById(Guid id)
+    {
+        var request = await _absenceRepository.GetRequestById(id);
+        if (request == null)
+        {
+            Console.WriteLine("not found");
+            return NotFound();
+        }
+
+        await _absenceRepository.RemoveAsync(id);
+        return NoContent();        
+    }
 }

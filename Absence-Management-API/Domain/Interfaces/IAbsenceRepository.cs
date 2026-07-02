@@ -8,5 +8,5 @@ public interface IAbsenceRepository
     // TODO: Task<AbsenceRequest?> GetRequestByEmployeeId(int employeeId);
     Task AddAsync(AbsenceRequest request);
     Task<AbsenceRequest?> UpdateAsync(Guid id, AbsenceRequest request);
-    // TODO: Task<AbsenceRequest?> RemoveAsync(Guid id);
+    Task<AbsenceRequest?> RemoveAsync(Guid id);
 }
