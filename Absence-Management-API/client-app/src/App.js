@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import './bootstrap.min.css';
-import {Button, ButtonGroup, Col, Form, FormGroup, Input, Label, Table} from "reactstrap";
+import { Button, ButtonGroup, Row, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 
 const path = "https://localhost:5013/api/absence-requests";
 
@@ -14,98 +14,6 @@ function App() {
         .then((data) => setAbsences(data))
         .catch(err => console.error("API Error:", err));
   }, []);
-
-    async function approveRequest(event) {
-        const requestId = event.target.dataset.id;
-        const approvedStatus = 1;
-        const response = await fetch(
-            `${path}/${requestId}`
-        );
-        const initialRequest = await response.json();
-        const data = JSON.stringify(
-            {
-                id: initialRequest.id,
-                employeeName: initialRequest.employeeName,
-                absenceType: initialRequest.absenceType,
-                absenceStatus: approvedStatus,
-                startDate: initialRequest.startDate,
-                endDate: initialRequest.endDate,
-                comment: initialRequest.comment
-            }
-        );
-        try {
-            const response = await fetch(
-                `${path}/${requestId}`, {
-                    method: 'PUT',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: data,
-                }
-            );
-            if (response.status === 202) {
-                console.log("change accepted");
-                updateRequestToState(await response.json(), approvedStatus);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function denyRequest(event) {
-        const requestId = event.target.dataset.id;
-        const deniedStatus = 2;
-        const response = await fetch(
-            `${path}/${requestId}`
-        );
-        const initialRequest = await response.json();
-        const data = JSON.stringify(
-            {
-                id: initialRequest.id,
-                employeeName: initialRequest.employeeName,
-                absenceType: initialRequest.absenceType,
-                absenceStatus: deniedStatus,
-                startDate: initialRequest.startDate,
-                endDate: initialRequest.endDate,
-                comment: initialRequest.comment
-            }
-        );
-        try {
-            const response = await fetch(
-                `${path}/${requestId}`, {
-                    method: 'PUT',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: data,
-                }
-            );
-            if (response.status === 202) {
-                console.log("change accepted");
-                updateRequestToState(await response.json(), deniedStatus);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function deleteRequest(event) {
-        const requestId = event.target.dataset.id;
-        try {
-            const response = await fetch(
-                `${path}/${requestId}`, {
-                    method: 'DELETE'
-                }
-            );
-            if (response.status === 201) {
-                console.log("successfully deleted");
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function handleSubmit(formData) {
         const employeeName = formData.get("employeeName");
@@ -155,13 +63,97 @@ function App() {
           }
         ]);
       }
-
-    function updateRequestToState(absence, newStatus) {
-        /*setAbsences(previousState => {
-            return { ...previousState, absenceStatus: newStatus }
-        });*/
-    }
     
+    const AbsenceStatus = (props) => {
+        const [ status, setStatus ] = useState(props.status);
+        
+        async function updateStatus(event){
+            const newStatus = parseInt(event.target.dataset.status);
+            const requestId = event.target.dataset.id;
+            try {
+                const absenceRequest = absences.find(absence => absence.id === requestId);
+                if (absenceRequest) {
+                    if (newStatus === 3) {
+                        await fetch(`${path}/${requestId}`, {
+                            method: 'DELETE'
+                        })
+                            .then((response) => {
+                                if (response.status === 201) {
+                                    console.log("successfully deleted");
+                                }                                
+                            })
+                    } else if (newStatus === 1 || newStatus === 2) {
+                        await fetch(`${path}/${requestId}`, {
+                            method: 'PUT',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                id: absenceRequest.id,
+                                employeeName: absenceRequest.employeeName,
+                                absenceType: absenceRequest.absenceType,
+                                absenceStatus: newStatus,
+                                startDate: absenceRequest.startDate,
+                                endDate: absenceRequest.endDate,
+                                comment: absenceRequest.comment
+                            })
+                        })
+                            .then((response) => {
+                                if (response.status === 202) {
+                                    console.log("change accepted");
+                                    setStatus(newStatus);
+                                }
+                            })
+                    } else {
+                        console.log("unknown absence status");
+                    }
+                } else {
+                    console.log("request not found");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        
+        return ( 
+            <td>
+                <Row>
+                    <Col sm={2}>
+                        {status}
+                    </Col>
+                    <Col sm={2}>
+                        <ButtonGroup>
+                            <Button
+                                data-id={props.id}
+                                data-status={1}
+                                color="success"
+                                onClick={updateStatus}
+                            >
+                                Approve
+                            </Button>
+                            <Button
+                                data-id={props.id}
+                                data-status={2}
+                                color="warning"
+                                onClick={updateStatus}
+                            >
+                                Deny
+                            </Button>
+                            <Button
+                                data-id={props.id}
+                                data-status={3}
+                                color="danger"
+                                onClick={updateStatus}>
+                                Delete
+                            </Button>
+                        </ButtonGroup>
+                    </Col>                    
+                </Row>
+            </td>
+        )
+    }
+
     const Request = (absence, index) => {
         const request = absence.absence;
         return (
@@ -172,31 +164,7 @@ function App() {
                 <td>{request.startDate.slice(0, 10)}</td>
                 <td>{request.endDate.slice(0, 10)}</td>
                 <td>{request.comment}</td>
-                <td>{request.absenceStatus}</td>
-                <td>
-                    <ButtonGroup>
-                        <Button
-                            data-id={request.id}
-                            color="success"
-                            onClick={approveRequest}
-                        >
-                            Approve
-                        </Button>
-                        <Button
-                            data-id={request.id}
-                            color="warning"
-                            onClick={denyRequest}
-                        >
-                            Deny
-                        </Button>
-                        <Button
-                            data-id={request.id}
-                            color="danger"
-                            onClick={deleteRequest}>
-                            Delete
-                        </Button>
-                    </ButtonGroup>
-                </td>
+                <AbsenceStatus status={request.absenceStatus} id={request.id} />
             </tr>
         )
     }
@@ -205,7 +173,6 @@ function App() {
         <Table
             bordered
             hover
-            responsive
             striped
         >
             <thead>
@@ -230,9 +197,6 @@ function App() {
                 </th>
                 <th>
                     Status
-                </th>
-                <th>
-                    Aktion
                 </th>
             </tr>
             </thead>
