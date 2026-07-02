@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
-import RequestTable from './components/RequestTable';
-import RequestForm from './components/RequestForm';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import './bootstrap.min.css';
+import {Button, ButtonGroup, Col, Form, FormGroup, Input, Label, Table} from "reactstrap";
 
-export async function approveRequest(event) {
+async function approveRequest(event) {
     const requestId = event.target.dataset.id;
     const approvedStatus = 1;
     const response = await fetch(
@@ -42,7 +41,7 @@ export async function approveRequest(event) {
     }
 }
 
-export async function denyRequest(event) {
+async function denyRequest(event) {
     const requestId = event.target.dataset.id;
     const deniedStatus = 2;
     const response = await fetch(
@@ -80,7 +79,7 @@ export async function denyRequest(event) {
     }
 }
 
-export async function deleteRequest(event) {
+async function deleteRequest(event) {
     const requestId = event.target.dataset.id;
     try {
         const response = await fetch(
@@ -96,7 +95,7 @@ export async function deleteRequest(event) {
     }
 }
 
-export async function handleSubmit(formData) {
+async function handleSubmit(formData) {
     const employeeName = formData.get("employeeName");
     const absenceType = parseFloat(formData.get("selectAbsenceType"));
     const startDate = formData.get("startDate");
@@ -156,8 +155,187 @@ function App() {
       }
     ]);
   }
-  
-  return (
+
+
+    const RequestTable = () =>
+        <Table
+            bordered
+            hover
+            responsive
+            striped
+        >
+            <thead>
+            <tr>
+                <th>
+                    Absenz ID-Nummer
+                </th>
+                <th>
+                    Mitarbeiter:in
+                </th>
+                <th>
+                    Abwesenheitstyp
+                </th>
+                <th>
+                    Startdatum
+                </th>
+                <th>
+                    Enddatum
+                </th>
+                <th>
+                    Kommentar
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Aktion
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+                absences.map((request, index) => {
+                    return (
+                        <tr>
+                            <th scope="row" key={index}>{request.id}</th>
+                            <td>{request.employeeName}</td>
+                            <td>{request.absenceType}</td>
+                            <td>{request.startDate}</td>
+                            <td>{request.endDate}</td>
+                            <td>{request.comment}</td>
+                            <td>{request.absenceStatus}</td>
+                            <td>
+                                <ButtonGroup>
+                                    <Button
+                                        data-id={request.id}
+                                        data-status={1}
+                                        color="success"
+                                        onClick={approveRequest}
+                                    >
+                                        Approve
+                                    </Button>
+                                    <Button
+                                        data-id={request.id}
+                                        data-status={2}
+                                        color="warning"
+                                        onClick={denyRequest}
+                                    >
+                                        Deny
+                                    </Button>
+                                    <Button
+                                        data-id={request.id}
+                                        data-status={3}
+                                        color="danger"
+                                        onClick={deleteRequest}
+                                    >
+                                        Delete
+                                    </Button>
+                                </ButtonGroup>
+                            </td>
+                        </tr>
+                    )
+                })
+            }
+            </tbody>
+        </Table>
+
+
+    const RequestForm = () =>
+        <Form
+            action={handleSubmit}
+        >
+            <FormGroup row>
+                <Label
+                    for="employeeName"
+                    sm={2}
+                >
+                    Mitarbeiter:in
+                </Label>
+                <Col sm={10}>
+                    <Input
+                        id="employeeName"
+                        name="employeeName"
+                        placeholder="Name eingeben"
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label
+                    for="selectAbsenceType"
+                    sm={2}
+                >
+                    Abwesenheitstyp
+                </Label>
+                <Col sm={10}>
+                    <Input
+                        id="selectAbsenceType"
+                        name="selectAbsenceType"
+                        type="select"
+                    >
+                        <option value={0}>Urlaub</option>
+                        <option value={1}>Krankheit</option>
+                        <option value={2}>Training</option>
+                        <option value={3}>Anderes</option>
+                    </Input>
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label
+                    for="startDate"
+                    sm={2}
+                >
+                    Startdatum
+                </Label>
+                <Col sm={10}>
+                    <Input
+                        id="startDate"
+                        name="startDate"
+                        placeholder="date placeholder"
+                        type="date"
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label
+                    for="endDate"
+                    sm={2}
+                >
+                    Enddatum
+                </Label>
+                <Col sm={10}>
+                    <Input
+                        id="endDate"
+                        name="endDate"
+                        placeholder="date placeholder"
+                        type="date"
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label
+                    for="comment"
+                    sm={2}
+                >
+                    Kommentare
+                </Label>
+                <Col sm={10}>
+                    <Input
+                        id="comment"
+                        name="comment"
+                        type="textarea"
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Col sm={2}>
+                    <Button primary>
+                        Neue Anfrage erstellen
+                    </Button>
+                </Col>
+            </FormGroup>
+        </Form>
+
+    return (
       <div className="App">
           <div className="container-fluid px-5 my-5">
               <div className="col">
