@@ -14,130 +14,48 @@ function App() {
         .then((data) => setAbsences(data))
         .catch(err => console.error("API Error:", err));
   }, []);
-
-    async function handleSubmit(formData) {
-        const employeeName = formData.get("employeeName");
-        const absenceType = parseFloat(formData.get("selectAbsenceType"));
-        const startDate = formData.get("startDate");
-        const endDate = formData.get("endDate");
-        const comment = formData.get("comment");
-        const data = JSON.stringify(
-            {
-                employeeName: employeeName,
-                absenceType: absenceType,
-                absenceStatus: 0,
-                startDate: startDate,
-                endDate: endDate,
-                comment: comment
-            }
+        
+    const RequestTable = () => {
+        return (
+            <Table
+                bordered
+                hover
+                striped
+            >
+                <thead>
+                <tr>
+                    <th>
+                        Absenz ID-Nummer
+                    </th>
+                    <th>
+                        Mitarbeiter:in
+                    </th>
+                    <th>
+                        Abwesenheitstyp
+                    </th>
+                    <th>
+                        Startdatum
+                    </th>
+                    <th>
+                        Enddatum
+                    </th>
+                    <th>
+                        Kommentar
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {absences.map((absence, index) =>
+                    <Request absence={absence} index={index}/>
+                )}
+                </tbody>
+            </Table>
         );
-        try {
-            const response = await fetch(
-                path, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: data,
-                }
-            );
-            // TODO: setTimeout()
-            if (response.status === 201) {
-                console.log("successfully added");
-                addRequestToState(await response.json());
-            }
-        } catch (error) {
-            console.log(error);
-        }
     }
-  
-      function addRequestToState(absence) {
-        setAbsences([
-          ...absences,
-          {
-            id: absence.id,
-            employeeName: absence.employeeName,
-            absenceType: absence.absenceType,
-            absenceStatus: absence.absenceStatus,
-            startDate: absence.startDate,
-            endDate: absence.endDate,
-            comment: absence.comment
-          }
-        ]);
-      }
     
-    const AbsenceStatus = (props) => {
-        const [ status, setStatus ] = useState(props.status);
-        
-        async function updateStatus(event){
-            const newStatus = parseInt(event.target.dataset.status);
-            const requestId = props.id;
-            try {
-                const absenceRequest = absences.find(absence => absence.id === requestId);
-                if (absenceRequest) {
-                    if (newStatus === 1 || newStatus === 2) {
-                        await fetch(`${path}/${requestId}`, {
-                            method: 'PUT',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                id: absenceRequest.id,
-                                employeeName: absenceRequest.employeeName,
-                                absenceType: absenceRequest.absenceType,
-                                absenceStatus: newStatus,
-                                startDate: absenceRequest.startDate,
-                                endDate: absenceRequest.endDate,
-                                comment: absenceRequest.comment
-                            })
-                        })
-                            .then((response) => {
-                                if (response.status === 202) {
-                                    console.log("successfully updated");
-                                    setStatus(newStatus);
-                                }
-                            })
-                    } else {
-                        console.log("unknown absence status");
-                    }
-                } else {
-                    console.log("request not found");
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        
-        return ( 
-            <td>
-                <Row>
-                    <Col sm={2}>
-                        {status}
-                    </Col>
-                    <Col sm={2}>
-                        <ButtonGroup>
-                            <Button
-                                data-id={props.id}
-                                data-status={1}
-                                color="success"
-                                onClick={updateStatus}
-                            >
-                                Approve
-                            </Button>
-                            <Button
-                                data-id={props.id}
-                                data-status={2}
-                                color="warning"
-                                onClick={updateStatus}
-                            >
-                                Deny
-                            </Button>
-                        </ButtonGroup>
-                    </Col>                    
-                </Row>
-            </td>
-        )
-    }
-
     const Request = (absence, index) => {
         const [ absenceRequest ] = useState(absence.absence);
 
@@ -183,47 +101,132 @@ function App() {
             </tr>
         )
     }
-    
-    const RequestTable = () =>
-        <Table
-            bordered
-            hover
-            striped
-        >
-            <thead>
-            <tr>
-                <th>
-                    Absenz ID-Nummer
-                </th>
-                <th>
-                    Mitarbeiter:in
-                </th>
-                <th>
-                    Abwesenheitstyp
-                </th>
-                <th>
-                    Startdatum
-                </th>
-                <th>
-                    Enddatum
-                </th>
-                <th>
-                    Kommentar
-                </th>
-                <th>
-                    Status
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {absences.map((absence, index) =>
-                <Request absence={absence} index={index} />                
-            )}
-            </tbody>
-        </Table>
 
+    const AbsenceStatus = (props) => {
+        const [ status, setStatus ] = useState(props.status);
 
-    const RequestForm = () =>
+        async function updateStatus(event){
+            const newStatus = parseInt(event.target.dataset.status);
+            const requestId = props.id;
+            try {
+                const absenceRequest = absences.find(absence => absence.id === requestId);
+                if (absenceRequest) {
+                    if (newStatus === 1 || newStatus === 2) {
+                        await fetch(`${path}/${requestId}`, {
+                            method: 'PUT',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                id: absenceRequest.id,
+                                employeeName: absenceRequest.employeeName,
+                                absenceType: absenceRequest.absenceType,
+                                absenceStatus: newStatus,
+                                startDate: absenceRequest.startDate,
+                                endDate: absenceRequest.endDate,
+                                comment: absenceRequest.comment
+                            })
+                        })
+                            .then((response) => {
+                                if (response.status === 202) {
+                                    console.log("successfully updated");
+                                    setStatus(newStatus);
+                                }
+                            })
+                    } else {
+                        console.log("unknown absence status");
+                    }
+                } else {
+                    console.log("request not found");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        return (
+            <td>
+                <Row>
+                    <Col sm={2}>
+                        {status}
+                    </Col>
+                    <Col sm={2}>
+                        <ButtonGroup>
+                            <Button
+                                data-id={props.id}
+                                data-status={1}
+                                color="success"
+                                onClick={updateStatus}
+                            >
+                                Approve
+                            </Button>
+                            <Button
+                                data-id={props.id}
+                                data-status={2}
+                                color="warning"
+                                onClick={updateStatus}
+                            >
+                                Deny
+                            </Button>
+                        </ButtonGroup>
+                    </Col>
+                </Row>
+            </td>
+        )
+    }
+
+    const RequestForm = () => {
+        async function handleSubmit(formData) {
+            const employeeName = formData.get("employeeName");
+            const absenceType = parseFloat(formData.get("selectAbsenceType"));
+            const startDate = formData.get("startDate");
+            const endDate = formData.get("endDate");
+            const comment = formData.get("comment");
+            const data = JSON.stringify(
+                {
+                    employeeName: employeeName,
+                    absenceType: absenceType,
+                    absenceStatus: 0,
+                    startDate: startDate,
+                    endDate: endDate,
+                    comment: comment
+                }
+            );
+            try {
+                const response = await fetch(
+                    path, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: data,
+                    }
+                );
+                // TODO: setTimeout()
+                if (response.status === 201) {
+                    console.log("successfully added");
+                    addRequestToState(await response.json());
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function addRequestToState(absence) {
+            setAbsences([
+                ...absences,
+                {
+                    id: absence.id,
+                    employeeName: absence.employeeName,
+                    absenceType: absence.absenceType,
+                    absenceStatus: absence.absenceStatus,
+                    startDate: absence.startDate,
+                    endDate: absence.endDate,
+                    comment: absence.comment
+                }
+            ]);
+        }
+        
+        return (
         <Form
             action={handleSubmit}
         >
@@ -317,6 +320,8 @@ function App() {
                 </Col>
             </FormGroup>
         </Form>
+        );
+    }
 
     return (
       <div className="App">
