@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import './bootstrap.min.css';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
+import { ToastContainer, toast, Slide } from 'react-toastify';
 
 const path = "https://localhost:5013/api/absence-requests";
 
@@ -175,6 +176,15 @@ function App() {
     }
 
     const RequestForm = () => {
+        const [ toggleClass, setToggleClass ] = useState("");
+        const notify = (message, autoClose) => toast.error(message, {
+            position: "top-center",
+            autoClose: autoClose,
+            hideProgressBar: true,
+            theme: "colored",
+            transition: Slide,
+        });
+        
         async function handleSubmit(formData) {
             const employeeName = formData.get("employeeName");
             const absenceType = parseFloat(formData.get("selectAbsenceType"));
@@ -203,6 +213,8 @@ function App() {
                 if (response.status === 201) {
                     console.log("successfully added");
                     addRequestToState(await response.json());
+                } else {
+                    notify("Etwas ist schiefgelaufen!", 5000);
                 }
             } catch (error) {
                 console.log(error);
@@ -223,7 +235,7 @@ function App() {
                 }
             ]);
         }
-        
+                
         return (
             <Form
                 action={handleSubmit}
@@ -239,8 +251,19 @@ function App() {
                         <Input
                             id="employeeName"
                             name="employeeName"
+                            className={toggleClass}
                             placeholder="Name eingeben"
+                            required
+                            onChange={e => {
+                                if (e.target.value.match(/\d/g) != null) {
+                                    notify("keine Zahlen erlaubt", 2000);
+                                    setToggleClass("is-invalid");
+                                } else {
+                                    setToggleClass("");
+                                }
+                            }}
                         />
+                        <ToastContainer />
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -276,6 +299,7 @@ function App() {
                             name="startDate"
                             placeholder="date placeholder"
                             type="date"
+                            required
                         />
                     </Col>
                 </FormGroup>
@@ -292,6 +316,7 @@ function App() {
                             name="endDate"
                             placeholder="date placeholder"
                             type="date"
+                            required
                         />
                     </Col>
                 </FormGroup>
@@ -307,6 +332,13 @@ function App() {
                             id="comment"
                             name="comment"
                             type="textarea"
+                            className={toggleClass}
+                            maxLength={300}
+                            onChange={e => {
+                                if (e.target.value.length >= 300) {
+                                    notify("maximal 300 Zeichen", 2000);
+                                }
+                            }}
                         />
                     </Col>
                 </FormGroup>
