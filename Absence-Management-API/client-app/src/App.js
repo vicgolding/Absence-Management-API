@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import './bootstrap.min.css';
-import { Button, ButtonGroup, Row, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
+import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 
 const path = "https://localhost:5013/api/absence-requests";
 
@@ -43,10 +43,7 @@ function App() {
                         Kommentar
                     </th>
                     <th>
-                        Status
-                    </th>
-                    <th>
-                        Aktionen
+                        Aktueller Status
                     </th>
                 </tr>
                 </thead>
@@ -62,7 +59,7 @@ function App() {
     const RequestRow = absence => {
         const [ absenceRequest ] = useState(absence.absence);
         const absenceType = absenceRequest.absenceType;
-        const absenceTypes = ["Urlaub", "Krankheit", "Weiterbildung", "Andere"];
+        const absenceTypes = ["Urlaub", "Krankheit", "Weiterbildung", "Sonstiges"];
         async function handleRemoveRequest() {
             try {
                 await fetch(`${path}/${absenceRequest.id}`, {
@@ -92,25 +89,28 @@ function App() {
                     {absenceRequest.endDate.slice(0, 10)}
                 </td>
                 <td>{absenceRequest.comment}</td>
-                <AbsenceStatus status={absenceRequest.absenceStatus} id={absenceRequest.id} />
                 <td>
-                    <Button
-                        data-id={absenceRequest.id}
-                        data-status={3}
-                        color="danger"
-                        onClick={handleRemoveRequest}>
-                        Delete
-                    </Button>
-                </td>
+                    <div className="action-btns">
+                       <AbsenceStatus status={absenceRequest.absenceStatus} id={absenceRequest.id} />
+                       <Button
+                           className="action-btn"
+                           data-id={absenceRequest.id}
+                           data-status={3}
+                           color="danger"
+                           onClick={handleRemoveRequest}>
+                           <i className="bi bi-trash3"></i>
+                       </Button>
+                    </div>
+                 </td>
             </tr>
         )
     }
 
     const AbsenceStatus = (props) => {
         const [ status, setStatus ] = useState(props.status);
-        const absenceStatuses = ["Pending", "Approved", "Denied"];
+        const absenceStatuses = ["Offen", "Genehmigt", "Abgelehnt"];
         async function updateStatus(event){
-            const newStatus = parseInt(event.target.dataset.status);
+            const newStatus = parseInt(event.target.closest("button").dataset.status);
             const requestId = props.id;
             try {
                 const absenceRequest = absences.find(absence => absence.id === requestId);
@@ -150,29 +150,27 @@ function App() {
         }
 
         return ([
-            <td key={props.id}>
+            <span key={props.id} className="me-auto">
                 {absenceStatuses[status]}
-            </td>,
-            <td key={props.id}>
-                <ButtonGroup>
-                    <Button
-                        data-id={props.id}
-                        data-status={1}
-                        color="success"
-                        onClick={updateStatus}
-                    >
-                        Approve
-                    </Button>
-                    <Button
-                        data-id={props.id}
-                        data-status={2}
-                        color="warning"
-                        onClick={updateStatus}
-                    >
-                        Deny
-                    </Button>
-                </ButtonGroup>
-            </td>
+            </span>,
+            <Button
+                className="action-btn"
+                data-id={props.id}
+                data-status={1}
+                color="success"
+                onClick={updateStatus}
+            >
+                <i className="bi bi-check"></i>
+            </Button>,
+            <Button
+                className="action-btn"
+                data-id={props.id}
+                data-status={2}
+                color="warning"
+                onClick={updateStatus}
+            >
+                <i className="bi bi-x"></i>
+            </Button>
         ]);
     }
 
@@ -260,8 +258,8 @@ function App() {
                         >
                             <option value={0}>Urlaub</option>
                             <option value={1}>Krankheit</option>
-                            <option value={2}>Training</option>
-                            <option value={3}>Anderes</option>
+                            <option value={2}>Weiterbildung</option>
+                            <option value={3}>Sonstiges</option>
                         </Input>
                     </Col>
                 </FormGroup>
@@ -315,7 +313,7 @@ function App() {
                 <FormGroup row>
                     <Col sm={2}>
                         <Button primary>
-                            Neue Anfrage erstellen
+                            Neuen Antrag erstellen
                         </Button>
                     </Col>
                 </FormGroup>
@@ -327,13 +325,13 @@ function App() {
       <div className="App">
           <div className="container-fluid px-5 my-5">
               <div className="col">
-                  <h2 className="text-center mb-5">Absenzübersicht</h2>
+                  <h2 className="text-center mb-5">Abwesenheitsanträge</h2>
                   <RequestTable />
               </div>
           </div>
           <div className="container my-5">
               <div className="col">
-                  <h2 className="text-center mb-5">Absenzformular</h2>
+                  <h2 className="text-center mb-5">Erfassen eines neuen Abwesenheitsantrags</h2>
                   <RequestForm />
               </div>
           </div>
