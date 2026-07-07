@@ -45,20 +45,24 @@ function App() {
                     <th>
                         Status
                     </th>
+                    <th>
+                        Aktionen
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
-                {absences.map((absence, index) =>
-                    <Request absence={absence} index={index}/>
+                {absences.map((absence) =>
+                    <RequestRow absence={absence} />
                 )}
                 </tbody>
             </Table>
         );
     }
     
-    const Request = (absence, index) => {
+    const RequestRow = absence => {
         const [ absenceRequest ] = useState(absence.absence);
-
+        const absenceType = absenceRequest.absenceType;
+        const absenceTypes = ["Urlaub", "Krankheit", "Weiterbildung", "Andere"];
         async function handleRemoveRequest() {
             try {
                 await fetch(`${path}/${absenceRequest.id}`, {
@@ -77,10 +81,10 @@ function App() {
         }
         
         return (
-            <tr key={index}>
+            <tr key={absenceRequest.id}>
                 <th scope="row">{absenceRequest.id}</th>
                 <td>{absenceRequest.employeeName}</td>
-                <td>{absenceRequest.absenceType}</td>
+                <td>{absenceTypes[absenceType]}</td>
                 <td>
                     {absenceRequest.startDate.slice(0, 10)}
                 </td>
@@ -104,7 +108,7 @@ function App() {
 
     const AbsenceStatus = (props) => {
         const [ status, setStatus ] = useState(props.status);
-
+        const absenceStatuses = ["Pending", "Approved", "Denied"];
         async function updateStatus(event){
             const newStatus = parseInt(event.target.dataset.status);
             const requestId = props.id;
@@ -145,35 +149,31 @@ function App() {
             }
         }
 
-        return (
-            <td>
-                <Row>
-                    <Col sm={2}>
-                        {status}
-                    </Col>
-                    <Col sm={2}>
-                        <ButtonGroup>
-                            <Button
-                                data-id={props.id}
-                                data-status={1}
-                                color="success"
-                                onClick={updateStatus}
-                            >
-                                Approve
-                            </Button>
-                            <Button
-                                data-id={props.id}
-                                data-status={2}
-                                color="warning"
-                                onClick={updateStatus}
-                            >
-                                Deny
-                            </Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
+        return ([
+            <td key={props.id}>
+                {absenceStatuses[status]}
+            </td>,
+            <td key={props.id}>
+                <ButtonGroup>
+                    <Button
+                        data-id={props.id}
+                        data-status={1}
+                        color="success"
+                        onClick={updateStatus}
+                    >
+                        Approve
+                    </Button>
+                    <Button
+                        data-id={props.id}
+                        data-status={2}
+                        color="warning"
+                        onClick={updateStatus}
+                    >
+                        Deny
+                    </Button>
+                </ButtonGroup>
             </td>
-        )
+        ]);
     }
 
     const RequestForm = () => {
@@ -211,7 +211,7 @@ function App() {
             }
         }
 
-        function addRequestToState(absence) {
+        const addRequestToState = absence => {
             setAbsences([
                 ...absences,
                 {
@@ -227,99 +227,99 @@ function App() {
         }
         
         return (
-        <Form
-            action={handleSubmit}
-        >
-            <FormGroup row>
-                <Label
-                    for="employeeName"
-                    sm={2}
-                >
-                    Mitarbeiter:in
-                </Label>
-                <Col sm={10}>
-                    <Input
-                        id="employeeName"
-                        name="employeeName"
-                        placeholder="Name eingeben"
-                    />
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label
-                    for="selectAbsenceType"
-                    sm={2}
-                >
-                    Abwesenheitstyp
-                </Label>
-                <Col sm={10}>
-                    <Input
-                        id="selectAbsenceType"
-                        name="selectAbsenceType"
-                        type="select"
+            <Form
+                action={handleSubmit}
+            >
+                <FormGroup row>
+                    <Label
+                        for="employeeName"
+                        sm={2}
                     >
-                        <option value={0}>Urlaub</option>
-                        <option value={1}>Krankheit</option>
-                        <option value={2}>Training</option>
-                        <option value={3}>Anderes</option>
-                    </Input>
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label
-                    for="startDate"
-                    sm={2}
-                >
-                    Startdatum
-                </Label>
-                <Col sm={10}>
-                    <Input
-                        id="startDate"
-                        name="startDate"
-                        placeholder="date placeholder"
-                        type="date"
-                    />
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label
-                    for="endDate"
-                    sm={2}
-                >
-                    Enddatum
-                </Label>
-                <Col sm={10}>
-                    <Input
-                        id="endDate"
-                        name="endDate"
-                        placeholder="date placeholder"
-                        type="date"
-                    />
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label
-                    for="comment"
-                    sm={2}
-                >
-                    Kommentare
-                </Label>
-                <Col sm={10}>
-                    <Input
-                        id="comment"
-                        name="comment"
-                        type="textarea"
-                    />
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Col sm={2}>
-                    <Button primary>
-                        Neue Anfrage erstellen
-                    </Button>
-                </Col>
-            </FormGroup>
-        </Form>
+                        Mitarbeiter:in
+                    </Label>
+                    <Col sm={10}>
+                        <Input
+                            id="employeeName"
+                            name="employeeName"
+                            placeholder="Name eingeben"
+                        />
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label
+                        for="selectAbsenceType"
+                        sm={2}
+                    >
+                        Abwesenheitstyp
+                    </Label>
+                    <Col sm={10}>
+                        <Input
+                            id="selectAbsenceType"
+                            name="selectAbsenceType"
+                            type="select"
+                        >
+                            <option value={0}>Urlaub</option>
+                            <option value={1}>Krankheit</option>
+                            <option value={2}>Training</option>
+                            <option value={3}>Anderes</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label
+                        for="startDate"
+                        sm={2}
+                    >
+                        Startdatum
+                    </Label>
+                    <Col sm={10}>
+                        <Input
+                            id="startDate"
+                            name="startDate"
+                            placeholder="date placeholder"
+                            type="date"
+                        />
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label
+                        for="endDate"
+                        sm={2}
+                    >
+                        Enddatum
+                    </Label>
+                    <Col sm={10}>
+                        <Input
+                            id="endDate"
+                            name="endDate"
+                            placeholder="date placeholder"
+                            type="date"
+                        />
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label
+                        for="comment"
+                        sm={2}
+                    >
+                        Kommentare
+                    </Label>
+                    <Col sm={10}>
+                        <Input
+                            id="comment"
+                            name="comment"
+                            type="textarea"
+                        />
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Col sm={2}>
+                        <Button primary>
+                            Neue Anfrage erstellen
+                        </Button>
+                    </Col>
+                </FormGroup>
+            </Form>
         );
     }
 
