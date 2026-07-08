@@ -13,7 +13,7 @@ function App() {
     fetch(path)
         .then(response => response.json())
         .then((data) => setAbsences(data))
-        .catch(err => console.error("API Error:", err));
+        .catch(error => Toast(`API error: ${error}`, 2000, "error"));
   }, []);
         
     const RequestTable = () => {
@@ -68,13 +68,13 @@ function App() {
                 })
                     .then((response) => {
                         if (response.status === 204) {
-                            console.log("successfully deleted");
+                            Toast("Successfully deleted", 2000, "warning");
                             const updatedRequests = absences.filter(a => a.id !== absenceRequest.id);
                             setAbsences(updatedRequests);
                         }
                     })
             } catch (error) {
-                console.error(error);
+                Toast(error, 2000, "error");
             }
         }
         
@@ -135,18 +135,18 @@ function App() {
                         })
                             .then((response) => {
                                 if (response.status === 202) {
-                                    console.log("successfully updated");
+                                    Toast("Successfully updated", 2000, "info");
                                     setStatus(newStatus);
                                 }
                             })
                     } else {
-                        console.log("unknown absence status");
+                        Toast("Unknown absence status", 2000, "error");
                     }
                 } else {
-                    console.log("request not found");
+                    Toast("Request not found", 2000, "error");
                 }
             } catch (error) {
-                console.error(error);
+                Toast(error, 2000, "error");
             }
         }
 
@@ -175,16 +175,19 @@ function App() {
         ]);
     }
 
-    const RequestForm = () => {
-        const [ toggleClass, setToggleClass ] = useState("");
-        const notify = (message, autoClose) => toast.error(message, {
+    const Toast = (message, autoClose, type) => {
+        toast(message, {
+            type: type,
             position: "top-center",
             autoClose: autoClose,
             hideProgressBar: true,
             theme: "colored",
             transition: Slide,
         });
-        
+    };
+    
+    const RequestForm = () => { 
+        const [isDisabled, setDisabled] = useState(false);
         async function handleSubmit(formData) {
             const employeeName = formData.get("employeeName");
             const absenceType = parseFloat(formData.get("selectAbsenceType"));
@@ -211,13 +214,13 @@ function App() {
                 );
                 // TODO: setTimeout()
                 if (response.status === 201) {
-                    console.log("successfully added");
+                    Toast("Successfully added", 2000, "success");
                     addRequestToState(await response.json());
                 } else {
-                    notify("Etwas ist schiefgelaufen!", 5000);
+                    Toast("Etwas ist schiefgelaufen!", 5000, "error");
                 }
             } catch (error) {
-                console.log(error);
+                Toast(error, 2000, "error");
             }
         }
 
@@ -251,19 +254,19 @@ function App() {
                         <Input
                             id="employeeName"
                             name="employeeName"
-                            className={toggleClass}
                             placeholder="Name eingeben"
                             required
                             onChange={e => {
                                 if (e.target.value.match(/\d/g) != null) {
-                                    notify("keine Zahlen erlaubt", 2000);
-                                    setToggleClass("is-invalid");
+                                    Toast("keine Zahlen erlaubt", 2000, "error");
+                                    if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
+                                    setDisabled(true);
                                 } else {
-                                    setToggleClass("");
+                                    if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
+                                    setDisabled(false);
                                 }
                             }}
                         />
-                        <ToastContainer />
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -332,11 +335,15 @@ function App() {
                             id="comment"
                             name="comment"
                             type="textarea"
-                            className={toggleClass}
                             maxLength={300}
                             onChange={e => {
                                 if (e.target.value.length >= 300) {
-                                    notify("maximal 300 Zeichen", 2000);
+                                    Toast("maximal 300 Zeichen", 2000, "error");
+                                    if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
+                                    setDisabled(true);
+                                } else {
+                                    if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
+                                    setDisabled(false);
                                 }
                             }}
                         />
@@ -344,7 +351,7 @@ function App() {
                 </FormGroup>
                 <FormGroup row>
                     <Col sm={2}>
-                        <Button primary>
+                        <Button primary disabled={isDisabled}>
                             Neuen Antrag erstellen
                         </Button>
                     </Col>
@@ -355,6 +362,7 @@ function App() {
 
     return (
       <div className="App">
+          <ToastContainer />
           <div className="container-fluid px-5 my-5">
               <div className="col">
                   <h2 className="text-center mb-5">Abwesenheitsanträge</h2>
