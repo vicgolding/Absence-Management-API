@@ -372,10 +372,9 @@ function App() {
                             id="comment"
                             name="comment"
                             type="textarea"
-                            maxLength={300}
                             onChange={e => {
-                                if (e.target.value.length >= 300) {
-                                    Toast("maximal 300 Zeichen", 2000, "error");
+                                if (e.target.value.length >= 150) {
+                                    Toast("Maximal 150 Zeichen", 2000, "error");
                                     if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
                                     setDisabled(true);
                                 } else {
