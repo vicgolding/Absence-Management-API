@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
@@ -188,6 +188,37 @@ function App() {
     
     const RequestForm = () => { 
         const [isDisabled, setDisabled] = useState(false);
+        const [startDateValue, setStartDate] = useState("");
+        const [endDateValue, setEndDate] = useState("");
+        const startDateRef = useRef(null);
+        const endDateRef = useRef(null);
+        
+        const validateStartDate = (e) => {
+            setStartDate(e.target.value);
+            let endDateValue = endDateRef.current.props.value;
+            if (endDateValue && endDateValue < e.target.value) {
+                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error");
+                if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
+                setDisabled(true);
+            } else {
+                if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
+                setDisabled(false);
+            }
+        }
+        
+        const validateEndDate = (e) => {
+            setEndDate(e.target.value);
+            let startDateValue = startDateRef.current.props.value;
+            if (startDateValue && startDateValue > e.target.value) {
+                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error");
+                if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
+                setDisabled(true);
+            } else {
+                if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
+                setDisabled(false);
+            }
+        }
+        
         async function handleSubmit(formData) {
             const employeeName = formData.get("employeeName");
             const absenceType = parseFloat(formData.get("selectAbsenceType"));
@@ -238,7 +269,7 @@ function App() {
                 }
             ]);
         }
-                
+
         return (
             <Form
                 action={handleSubmit}
@@ -303,6 +334,9 @@ function App() {
                             placeholder="date placeholder"
                             type="date"
                             required
+                            ref={startDateRef}
+                            value={startDateValue}
+                            onChange={(e) => validateStartDate(e)}
                         />
                     </Col>
                 </FormGroup>
@@ -320,6 +354,9 @@ function App() {
                             placeholder="date placeholder"
                             type="date"
                             required
+                            ref={endDateRef}
+                            value={endDateValue}
+                            onChange={(e) => validateEndDate(e)}
                         />
                     </Col>
                 </FormGroup>
