@@ -15,7 +15,21 @@ function App() {
         .then((data) => setAbsences(data))
         .catch(error => Toast(`API error: ${error}`, 2000, "error"));
   }, []);
-        
+
+    const Toast = (message, autoClose, type, inputId) => {
+        if (!toast.isActive(inputId)) {
+            toast(message, {
+                toastId: inputId,
+                type: type,
+                position: "top-center",
+                autoClose: autoClose,
+                hideProgressBar: true,
+                theme: "colored",
+                transition: Slide,
+            });
+        }
+    };
+  
     const RequestTable = () => {
         return (
             <Table
@@ -174,17 +188,6 @@ function App() {
             </Button>
         ]);
     }
-
-    const Toast = (message, autoClose, type) => {
-        toast(message, {
-            type: type,
-            position: "top-center",
-            autoClose: autoClose,
-            hideProgressBar: true,
-            theme: "colored",
-            transition: Slide,
-        });
-    };
     
     const RequestForm = () => { 
         const [isDisabled, setDisabled] = useState(false);
@@ -192,17 +195,25 @@ function App() {
         const [endDateValue, setEndDate] = useState("");
         const startDateRef = useRef(null);
         const endDateRef = useRef(null);
+
+        const validateInput = (input, isValid) => {
+            if (!isValid) {
+                if (!input.classList.contains("is-invalid")) {input.classList.add("is-invalid");}
+                setDisabled(true);
+            } else {
+                if (input.classList.contains("is-invalid")) {input.classList.remove("is-invalid");}
+                setDisabled(false);
+            }
+        }
         
         const validateStartDate = (e) => {
             setStartDate(e.target.value);
             let endDateValue = endDateRef.current.props.value;
             if (endDateValue && endDateValue < e.target.value) {
-                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error");
-                if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
-                setDisabled(true);
+                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
+                validateInput(e.target, false);
             } else {
-                if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
-                setDisabled(false);
+                validateInput(e.target, true);
             }
         }
         
@@ -210,12 +221,10 @@ function App() {
             setEndDate(e.target.value);
             let startDateValue = startDateRef.current.props.value;
             if (startDateValue && startDateValue > e.target.value) {
-                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error");
-                if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
-                setDisabled(true);
+                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
+                validateInput(e.target, false);
             } else {
-                if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
-                setDisabled(false);
+                validateInput(e.target, true);
             }
         }
         
@@ -289,12 +298,10 @@ function App() {
                             required
                             onChange={e => {
                                 if (e.target.value.match(/\d/g) != null) {
-                                    Toast("keine Zahlen erlaubt", 2000, "error");
-                                    if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
-                                    setDisabled(true);
+                                    Toast("Keine Zahlen erlaubt", 2000, "error", e.target.id);
+                                    validateInput(e.target, false);
                                 } else {
-                                    if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
-                                    setDisabled(false);
+                                    validateInput(e.target, true);
                                 }
                             }}
                         />
@@ -374,12 +381,10 @@ function App() {
                             type="textarea"
                             onChange={e => {
                                 if (e.target.value.length >= 150) {
-                                    Toast("Maximal 150 Zeichen", 2000, "error");
-                                    if (!e.target.classList.contains("is-invalid")) {e.target.classList.add("is-invalid");}
-                                    setDisabled(true);
+                                    Toast("Maximal 150 Zeichen", 2000, "error", e.target.id);
+                                    validateInput(e.target, false);
                                 } else {
-                                    if (e.target.classList.contains("is-invalid")) {e.target.classList.remove("is-invalid");}
-                                    setDisabled(false);
+                                    validateInput(e.target, true);
                                 }
                             }}
                         />
