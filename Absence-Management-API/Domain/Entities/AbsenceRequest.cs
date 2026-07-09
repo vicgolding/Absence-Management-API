@@ -8,7 +8,7 @@ public class AbsenceRequest
     public Guid Id { get; private set; }
     // public int EmployeeId { get; private set; }
     [StringLength(
-        100, ErrorMessage = "The employee name field cannot exceed 100 characters. "
+        75, ErrorMessage = "The employee name field cannot exceed 100 characters. "
     )]
     public string EmployeeName { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
@@ -16,7 +16,7 @@ public class AbsenceRequest
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
     [StringLength(
-        100, ErrorMessage = "The comment field cannot exceed 100 characters. "
+        150, ErrorMessage = "The comment field cannot exceed 100 characters. "
     )]
     // TODO: auto-property accessor 'Comment.get' is never used
     public string? Comment { get; private set; }
@@ -57,7 +57,7 @@ public class AbsenceRequest
     
     public void ApproveRequest()
     {
-        try
+        try 
         {
             if ( 
                 StartDate >= EndDate

@@ -281,10 +281,14 @@ function App() {
                             placeholder="Name eingeben"
                             required
                             onChange={e => {
-                                if (e.target.value.match(/\d/g) != null) {
-                                    showToast("Keine Zahlen erlaubt", 2000, "error", e.target.id);
+                                if (e.target.value.match(/\d/g) != null || e.target.value.length >= 75) {
                                     validateInput(e.target, false);
                                     setDisabled(true);
+                                    if (e.target.value.match(/\d/g) != null) {
+                                        showToast("Keine Zahlen erlaubt", 2000, "error", e.target.id);
+                                    } else if (e.target.value.length >= 75) {
+                                        showToast("Maximal 75 Zeichen erlaubt", 2000, "error", e.target.id);
+                                    }
                                 } else {
                                     validateInput(e.target, true);
                                     setDisabled(false);
