@@ -7,29 +7,23 @@ public class AbsenceRequest
 {
     public Guid Id { get; private set; }
     // public int EmployeeId { get; private set; }
+    [RegularExpression(@"^\d$", ErrorMessage = "The name cannot contain numbers.")]
     [StringLength(
         75, ErrorMessage = "The employee name field cannot exceed 100 characters. "
     )]
     public string EmployeeName { get; private set; }
     public AbsenceType AbsenceType { get; private set; }
     public AbsenceStatus AbsenceStatus { get; set; }
+    [DataType(DataType.DateTime)]
     public DateTime StartDate { get; private set; }
+    [DataType(DataType.DateTime)]
     public DateTime EndDate { get; private set; }
     [StringLength(
         150, ErrorMessage = "The comment field cannot exceed 100 characters. "
     )]
     // TODO: auto-property accessor 'Comment.get' is never used
     public string? Comment { get; private set; }
-
-    /*
-     * TODO: Convert into primary constructor
-     * Error at runtime:
-     * Primary constructor was not suitable and had parameters that could not be bound
-     * to properties of the type.
-     * Cannot bind 'employeeName', 'absenceType', 'absenceStatus', 'startDate', 'endDate', 'comment'
-     * Note that only mapped properties can be bound to constructor parameters.
-     * Navigations to related entities, including references to owned types, cannot be bound.
-    */
+    
     public AbsenceRequest(
         string employeeName,
         AbsenceType absenceType,
@@ -39,59 +33,18 @@ public class AbsenceRequest
         string? comment
     )
     {
-        /*
-         * TODO: Initialise a new instance of the KeyAttribute class
-         * [Key] denotes one or more properties that uniquely identify an entity.
-         * [Key] is not valid on this data type.
-         * It is valid on 'property, field' declarations only.
-        */
         Id = Guid.NewGuid();
         // TODO: EmployeeId = employeeId;
         EmployeeName = employeeName;
         AbsenceType = absenceType;
         AbsenceStatus = absenceStatus;
-        StartDate = startDate;
-        EndDate =  endDate;
         Comment = comment;
-    }
-    
-    public void ApproveRequest()
-    {
-        try 
+        var comparisonResult = DateTime.Compare(startDate, endDate);
+        if (comparisonResult > 0)
         {
-            if ( 
-                StartDate >= EndDate
-                || EndDate <= StartDate
-                || AbsenceStatus != AbsenceStatus.Pending 
-            )
-            {
-                throw new Exception();
-            }
+            throw new Exception("Enddatum darf nicht vor dem Startdatum liegen");
         }
-        catch (Exception error)
-        {
-            // TODO: argument 'e.Message' is not used in format string
-            Console.WriteLine("An exception has occurred!", error.Message);
-        }
-    }
-
-    public void DenyRequest()
-    {
-        try
-        {
-            if (
-                StartDate >= EndDate
-                || EndDate <= StartDate
-                || AbsenceStatus != AbsenceStatus.Pending
-            )
-            {
-                throw new Exception();
-            }
-        }
-        catch (Exception error)
-        {
-            // TODO: argument 'e.Message' is not used in format string
-            Console.WriteLine("An exception has occurred!", error.Message);   
-        }
+        StartDate = startDate;
+        EndDate = endDate;
     }
 }
