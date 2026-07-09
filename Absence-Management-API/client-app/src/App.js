@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
-import { ToastContainer, toast, Slide } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { validateInput, showToast } from './functions';
 
 const path = "https://localhost:5013/api/absence-requests";
 
@@ -13,22 +14,8 @@ function App() {
     fetch(path)
         .then(response => response.json())
         .then((data) => setAbsences(data))
-        .catch(error => Toast(`API error: ${error}`, 2000, "error"));
+        .catch(error => showToast(`API error: ${error}`, 2000, "error"));
   }, []);
-
-    const Toast = (message, autoClose, type, inputId) => {
-        if (!toast.isActive(inputId)) {
-            toast(message, {
-                toastId: inputId,
-                type: type,
-                position: "top-center",
-                autoClose: autoClose,
-                hideProgressBar: true,
-                theme: "colored",
-                transition: Slide,
-            });
-        }
-    };
   
     const RequestTable = () => {
         return (
@@ -82,13 +69,13 @@ function App() {
                 })
                     .then((response) => {
                         if (response.status === 204) {
-                            Toast("Successfully deleted", 2000, "warning");
+                            showToast("Successfully deleted", 2000, "warning");
                             const updatedRequests = absences.filter(a => a.id !== absenceRequest.id);
                             setAbsences(updatedRequests);
                         }
                     })
             } catch (error) {
-                Toast(error, 2000, "error");
+                showToast(error, 2000, "error");
             }
         }
         
@@ -149,18 +136,18 @@ function App() {
                         })
                             .then((response) => {
                                 if (response.status === 202) {
-                                    Toast("Successfully updated", 2000, "info");
+                                    showToast("Successfully updated", 2000, "info");
                                     setStatus(newStatus);
                                 }
                             })
                     } else {
-                        Toast("Unknown absence status", 2000, "error");
+                        showToast("Unknown absence status", 2000, "error");
                     }
                 } else {
-                    Toast("Request not found", 2000, "error");
+                    showToast("Request not found", 2000, "error");
                 }
             } catch (error) {
-                Toast(error, 2000, "error");
+                showToast(error, 2000, "error");
             }
         }
 
@@ -195,25 +182,17 @@ function App() {
         const [endDateValue, setEndDate] = useState("");
         const startDateRef = useRef(null);
         const endDateRef = useRef(null);
-
-        const validateInput = (input, isValid) => {
-            if (!isValid) {
-                if (!input.classList.contains("is-invalid")) {input.classList.add("is-invalid");}
-                setDisabled(true);
-            } else {
-                if (input.classList.contains("is-invalid")) {input.classList.remove("is-invalid");}
-                setDisabled(false);
-            }
-        }
         
         const validateStartDate = (e) => {
             setStartDate(e.target.value);
             let endDateValue = endDateRef.current.props.value;
             if (endDateValue && endDateValue < e.target.value) {
-                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
+                showToast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
                 validateInput(e.target, false);
+                setDisabled(true);
             } else {
                 validateInput(e.target, true);
+                setDisabled(false);
             }
         }
         
@@ -221,10 +200,12 @@ function App() {
             setEndDate(e.target.value);
             let startDateValue = startDateRef.current.props.value;
             if (startDateValue && startDateValue > e.target.value) {
-                Toast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
+                showToast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
                 validateInput(e.target, false);
+                setDisabled(true);
             } else {
                 validateInput(e.target, true);
+                setDisabled(false);
             }
         }
         
@@ -254,13 +235,13 @@ function App() {
                 );
                 // TODO: setTimeout()
                 if (response.status === 201) {
-                    Toast("Successfully added", 2000, "success");
+                    showToast("Successfully added", 2000, "success");
                     addRequestToState(await response.json());
                 } else {
-                    Toast("Etwas ist schiefgelaufen!", 5000, "error");
+                    showToast("Etwas ist schiefgelaufen!", 5000, "error");
                 }
             } catch (error) {
-                Toast(error, 2000, "error");
+                showToast(error, 2000, "error");
             }
         }
 
@@ -298,10 +279,12 @@ function App() {
                             required
                             onChange={e => {
                                 if (e.target.value.match(/\d/g) != null) {
-                                    Toast("Keine Zahlen erlaubt", 2000, "error", e.target.id);
+                                    showToast("Keine Zahlen erlaubt", 2000, "error", e.target.id);
                                     validateInput(e.target, false);
+                                    setDisabled(true);
                                 } else {
                                     validateInput(e.target, true);
+                                    setDisabled(false);
                                 }
                             }}
                         />
@@ -381,10 +364,12 @@ function App() {
                             type="textarea"
                             onChange={e => {
                                 if (e.target.value.length >= 150) {
-                                    Toast("Maximal 150 Zeichen", 2000, "error", e.target.id);
+                                    showToast("Maximal 150 Zeichen", 2000, "error", e.target.id);
                                     validateInput(e.target, false);
+                                    setDisabled(true);
                                 } else {
                                     validateInput(e.target, true);
+                                    setDisabled(false);
                                 }
                             }}
                         />
