@@ -33,13 +33,13 @@ function App() {
                         Mitarbeiter:in
                     </th>
                     <th>
-                        Abwesenheitstyp
+                        Art
                     </th>
                     <th>
-                        Startdatum
+                        Beginn
                     </th>
                     <th>
-                        Enddatum
+                        Ende
                     </th>
                     <th>
                         Kommentar
@@ -92,15 +92,16 @@ function App() {
                 </td>
                 <td>{absenceRequest.comment}</td>
                 <td>
-                    <div className="action-btns">
+                    <div className="action-btns justify-content-center">
                        <AbsenceStatus status={absenceRequest.absenceStatus} id={absenceRequest.id} />
                        <Button
-                           className="action-btn"
+                           className="action-btn btn-sm"
                            data-id={absenceRequest.id}
                            data-status={3}
                            color="danger"
                            onClick={handleRemoveRequest}>
                            <i className="bi bi-trash3"></i>
+                           <span className="visually-hidden">Antrag entfernen</span>
                        </Button>
                     </div>
                  </td>
@@ -152,26 +153,28 @@ function App() {
         }
 
         return ([
-            <span key={props.id} className="me-auto">
+            <span key={props.id} className="me-auto pe-xl-3">
                 {absenceStatuses[status]}
             </span>,
             <Button
-                className="action-btn"
+                className="action-btn btn-sm"
                 data-id={props.id}
                 data-status={1}
                 color="success"
                 onClick={updateStatus}
             >
                 <i className="bi bi-check"></i>
+                <span className="visually-hidden">Antrag genehmigen</span>
             </Button>,
             <Button
-                className="action-btn"
+                className="action-btn btn-sm"
                 data-id={props.id}
                 data-status={2}
                 color="warning"
                 onClick={updateStatus}
             >
                 <i className="bi bi-x"></i>
+                <span className="visually-hidden">Antrag ablehnen</span>
             </Button>
         ]);
     }
@@ -295,7 +298,7 @@ function App() {
                         for="selectAbsenceType"
                         sm={2}
                     >
-                        Abwesenheitstyp
+                        Art
                     </Label>
                     <Col sm={10}>
                         <Input
@@ -315,7 +318,7 @@ function App() {
                         for="startDate"
                         sm={2}
                     >
-                        Startdatum
+                        Beginn
                     </Label>
                     <Col sm={10}>
                         <Input
@@ -335,7 +338,7 @@ function App() {
                         for="endDate"
                         sm={2}
                     >
-                        Enddatum
+                        Ende
                     </Label>
                     <Col sm={10}>
                         <Input
@@ -389,13 +392,20 @@ function App() {
     return (
       <div className="App">
           <ToastContainer />
-          <div className="container-fluid px-5 my-5">
+          <header>
+              <div className="container-xxl mt-5">
+                <Col>
+                    <h1>Mini-Urlaubsverwaltung</h1>
+                </Col>
+              </div>
+          </header>
+          <div className="container-xxl my-5">
               <div className="col">
                   <h2 className="text-center mb-5">Abwesenheitsanträge</h2>
                   <RequestTable />
               </div>
           </div>
-          <div className="container my-5">
+          <div className="container-xxl mb-5">
               <div className="col">
                   <h2 className="text-center mb-5">Erfassen eines neuen Abwesenheitsantrags</h2>
                   <RequestForm />

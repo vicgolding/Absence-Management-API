@@ -36,6 +36,31 @@
   }
 }
 
+table.table td {
+  min-width: 7rem;
+}
+
 .action-btns {
-  display: flex;
+  display: grid;
+  .action-btn {
+    width: 2rem;
+  }
+  @media (max-width: 1199px) {
+    .action-btn {
+      margin-left: auto;
+      margin-right: auto;      
+    }
+    .action-btn:first-of-type {
+      margin-top: 0.5rem;
+    }
+    .action-btn:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }    
+  }
+  @media (min-width: 1200px) {
+    display: flex;
+    .action-btn:not(:last-child) {
+      margin-right: 0.5rem;
+    }
+  }
 }
