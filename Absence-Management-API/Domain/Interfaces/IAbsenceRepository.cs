@@ -8,4 +8,6 @@ public interface IAbsenceRepository
     Task AddAsync(AbsenceRequest request);
     Task<AbsenceRequest?> UpdateAsync(Guid id, AbsenceRequest request);
     Task<AbsenceRequest?> RemoveAsync(Guid id);
+    Task<AbsenceRequest?> ApproveRequest(Guid id);
+    Task<AbsenceRequest?> DenyRequest(Guid id);
 }

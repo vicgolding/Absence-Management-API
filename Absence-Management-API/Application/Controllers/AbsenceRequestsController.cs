@@ -76,4 +76,32 @@ public class AbsenceRequestsController(IAbsenceRepository absenceRepository) : C
         await _absenceRepository.RemoveAsync(id);
         return NoContent();        
     }
+    
+    // POST api/absence-requests/approve/{id}
+    [HttpPost("approve")]
+    public async Task<ActionResult<AbsenceRequest>> ApproveRequest(Guid id)
+    {
+        var request = await _absenceRepository.GetRequestById(id);
+        if (request == null)
+        {
+            return NotFound();
+        }
+
+        await _absenceRepository.ApproveRequest(id);
+        return Accepted($"/api/absence-requests/{request.Id}", request);
+    }
+     
+    // POST api/absence-requests/deny/{id}
+    [HttpPost("deny")]
+    public async Task<ActionResult<AbsenceRequest>> DenyRequest(Guid id)
+    {
+        var request = await _absenceRepository.GetRequestById(id);
+        if (request == null)
+        {
+            return NotFound();
+        }
+
+        await _absenceRepository.DenyRequest(id);
+        return Accepted($"/api/absence-requests/{request.Id}", request);
+    }
 }

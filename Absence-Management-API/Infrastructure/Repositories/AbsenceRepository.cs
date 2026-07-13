@@ -41,4 +41,20 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
         await _context.SaveChangesAsync();
         return existingRequest;
     }
+
+    public async Task<AbsenceRequest?> ApproveRequest(Guid id)
+    {
+        var existingRequest = await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
+        AbsenceRequest.ApproveRequest(existingRequest);
+        await _context.SaveChangesAsync();
+        return existingRequest;
+    }
+
+    public async Task<AbsenceRequest?> DenyRequest(Guid id)
+    {
+        var existingRequest = await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
+        AbsenceRequest.DenyRequest(existingRequest);
+        await _context.SaveChangesAsync();
+        return existingRequest;
+    }
 }

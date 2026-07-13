@@ -43,4 +43,32 @@ public class AbsenceRequest
         StartDate = startDate;
         EndDate = endDate;
     }
+
+    public static void ApproveRequest(AbsenceRequest? request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var absenceStatus = request.AbsenceStatus;
+        if (absenceStatus == AbsenceStatus.Pending)
+        {
+            request.AbsenceStatus = AbsenceStatus.Approved;
+        }
+        else
+        {
+            throw new Exception("Der Antrag wurde bereits bearbeitet.");
+        }
+    }
+
+    public static void DenyRequest(AbsenceRequest? request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var absenceStatus = request.AbsenceStatus;
+        if (absenceStatus == AbsenceStatus.Pending)
+        {
+            request.AbsenceStatus = AbsenceStatus.Denied;
+        }
+        else
+        {
+            throw new Exception("Der Antrag wurde bereits bearbeitet.");
+        }
+    }
 }
