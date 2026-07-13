@@ -112,58 +112,82 @@ function App() {
     const AbsenceStatus = (props) => {
         const [ status, setStatus ] = useState(props.status);
         const absenceStatuses = ["Offen", "Genehmigt", "Abgelehnt"];
-        async function updateStatus(event){
-            const newStatus = parseInt(event.target.closest("button").dataset.status);
+
+        async function ApproveRequest() {
             const requestId = props.id;
             try {
                 const absenceRequest = absences.find(absence => absence.id === requestId);
                 if (absenceRequest) {
                     if (absenceRequest.absenceStatus !== 0) {
                         showToast(
-                            "Antrag darf nicht mehr bearbeitet werden", 
+                            "Antrag darf nicht mehr bearbeitet werden",
                             2000, "error");
-                    } else if (newStatus === 1 || newStatus === 2) {
-                        await fetch(`${path}/${requestId}`, {
-                            method: 'PUT',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                id: absenceRequest.id,
-                                employeeName: absenceRequest.employeeName,
-                                absenceType: absenceRequest.absenceType,
-                                absenceStatus: newStatus,
-                                startDate: absenceRequest.startDate,
-                                endDate: absenceRequest.endDate,
-                                comment: absenceRequest.comment
-                            })
-                        })
-                            .then((response) => {
-                                if (response.status === 202) {
-                                    showToast(
-                                        "Successfully updated", 
-                                        2000, 
-                                        "info");
-                                    setStatus(newStatus);
-                                }
-                            })
                     } else {
-                        showToast(
-                            "Unknown absence status", 
-                            2000, 
-                            "error");
+                        await fetch(`${path}/approve?id=${requestId}`, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json'
+                            }
+                        })
+                        .then((response) => {
+                            if (response.status === 202) {
+                                showToast(
+                                    "Antrag wurde genehmigt.",
+                                    2000,
+                                    "info");
+                                setStatus(1);
+                            }
+                        })
                     }
                 } else {
                     showToast(
-                        "Request not found", 
-                        2000, 
+                        "Request not found",
+                        2000,
                         "error");
                 }
             } catch (error) {
                 showToast(
                     `Fehlermeldung: ${error}`,
                     2000, 
+                    "error");
+            }
+        }
+        async function DenyRequest() {
+            const requestId = props.id;
+            try {
+                const absenceRequest = absences.find(absence => absence.id === requestId);
+                if (absenceRequest) {
+                    if (absenceRequest.absenceStatus !== 0) {
+                        showToast(
+                            "Antrag darf nicht mehr bearbeitet werden",
+                            2000, "error");
+                    } else {
+                        await fetch(`${path}/deny?id=${requestId}`, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json'
+                            }
+                        })
+                        .then((response) => {
+                            if (response.status === 202) {
+                                showToast(
+                                    "Antrag wurde abgelehnt.",
+                                    2000,
+                                    "info");
+                                setStatus(2);
+                            }
+                        })
+                    }
+                } else {
+                    showToast(
+                        "Request not found",
+                        2000,
+                        "error");
+                }
+            } catch (error) {
+                showToast(
+                    `Fehlermeldung: ${error}`,
+                    2000,
                     "error");
             }
         }
@@ -177,7 +201,7 @@ function App() {
                 data-id={props.id}
                 data-status={1}
                 color="success"
-                onClick={updateStatus}
+                onClick={ApproveRequest}
             >
                 <i className="bi bi-check"></i>
                 <span className="visually-hidden">Antrag genehmigen</span>
@@ -187,7 +211,7 @@ function App() {
                 data-id={props.id}
                 data-status={2}
                 color="warning"
-                onClick={updateStatus}
+                onClick={DenyRequest}
             >
                 <i className="bi bi-x"></i>
                 <span className="visually-hidden">Antrag ablehnen</span>
