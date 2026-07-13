@@ -118,7 +118,11 @@ function App() {
             try {
                 const absenceRequest = absences.find(absence => absence.id === requestId);
                 if (absenceRequest) {
-                    if (newStatus === 1 || newStatus === 2) {
+                    if (absenceRequest.absenceStatus !== 0) {
+                        showToast(
+                            "Antrag darf nicht mehr bearbeitet werden", 
+                            2000, "error");
+                    } else if (newStatus === 1 || newStatus === 2) {
                         await fetch(`${path}/${requestId}`, {
                             method: 'PUT',
                             headers: {
