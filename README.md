@@ -74,7 +74,7 @@ Built with
 - .NET/C# - Backend
 - React - Frontend
 - Bootstrap / Reactstrap - UI Framework
-- Fetch API - communication to backend
+- Fetch API - communication with backend
 
 Contribute
 ---

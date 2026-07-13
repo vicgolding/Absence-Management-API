@@ -6,7 +6,6 @@ namespace Absence_Management_API.Domain.Entities;
 public class AbsenceRequest
 {
     public Guid Id { get; private set; }
-    // public int EmployeeId { get; private set; }
     [RegularExpression(@"^\d$", ErrorMessage = "The name cannot contain numbers.")]
     [StringLength(
         75, ErrorMessage = "The employee name field cannot exceed 100 characters. "
@@ -21,7 +20,6 @@ public class AbsenceRequest
     [StringLength(
         150, ErrorMessage = "The comment field cannot exceed 100 characters. "
     )]
-    // TODO: auto-property accessor 'Comment.get' is never used
     public string? Comment { get; private set; }
     
     public AbsenceRequest(
@@ -34,7 +32,6 @@ public class AbsenceRequest
     )
     {
         Id = Guid.NewGuid();
-        // TODO: EmployeeId = employeeId;
         EmployeeName = employeeName;
         AbsenceType = absenceType;
         AbsenceStatus = absenceStatus;

@@ -236,7 +236,6 @@ function App() {
                         body: data,
                     }
                 );
-                // TODO: setTimeout()
                 if (response.status === 201) {
                     showToast("Successfully added", 2000, "success");
                     addRequestToState(await response.json());
