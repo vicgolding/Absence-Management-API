@@ -137,18 +137,30 @@ function App() {
                         })
                             .then((response) => {
                                 if (response.status === 202) {
-                                    showToast("Successfully updated", 2000, "info");
+                                    showToast(
+                                        "Successfully updated", 
+                                        2000, 
+                                        "info");
                                     setStatus(newStatus);
                                 }
                             })
                     } else {
-                        showToast("Unknown absence status", 2000, "error");
+                        showToast(
+                            "Unknown absence status", 
+                            2000, 
+                            "error");
                     }
                 } else {
-                    showToast("Request not found", 2000, "error");
+                    showToast(
+                        "Request not found", 
+                        2000, 
+                        "error");
                 }
             } catch (error) {
-                showToast(error, 2000, "error");
+                showToast(
+                    `Fehlermeldung: ${error}`,
+                    2000, 
+                    "error");
             }
         }
 
@@ -190,7 +202,11 @@ function App() {
             setStartDate(e.target.value);
             let endDateValue = endDateRef.current.props.value;
             if (endDateValue && endDateValue < e.target.value) {
-                showToast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
+                showToast(
+                    "Das Startdatum darf nicht nach dem Enddatum liegen.", 
+                    2000, 
+                    "error", 
+                    e.target.id);
                 validateInput(e.target, false);
                 setDisabled(true);
             } else {
@@ -203,7 +219,11 @@ function App() {
             setEndDate(e.target.value);
             let startDateValue = startDateRef.current.props.value;
             if (startDateValue && startDateValue > e.target.value) {
-                showToast("Das Startdatum darf nicht nach dem Enddatum liegen.", 2000, "error", e.target.id);
+                showToast(
+                    "Das Startdatum darf nicht nach dem Enddatum liegen.",
+                    2000,
+                    "error",
+                    e.target.id);
                 validateInput(e.target, false);
                 setDisabled(true);
             } else {
@@ -237,13 +257,22 @@ function App() {
                     }
                 );
                 if (response.status === 201) {
-                    showToast("Successfully added", 2000, "success");
+                    showToast(
+                        "Successfully added", 
+                        2000, 
+                        "success");
                     addRequestToState(await response.json());
                 } else {
-                    showToast("Etwas ist schiefgelaufen!", 5000, "error");
+                    showToast(
+                        "Etwas ist schiefgelaufen!", 
+                        5000, 
+                        "error");
                 }
             } catch (error) {
-                showToast(error, 2000, "error");
+                showToast(
+                    `Fehlermeldung: ${error}`,
+                    2000, 
+                    "error");
             }
         }
 
@@ -280,13 +309,22 @@ function App() {
                             placeholder="Name eingeben"
                             required
                             onChange={e => {
-                                if (e.target.value.match(/\d/g) != null || e.target.value.length >= 75) {
+                                if (e.target.value.match(/\d/g) != null 
+                                    || e.target.value.length >= 75) {
                                     validateInput(e.target, false);
                                     setDisabled(true);
                                     if (e.target.value.match(/\d/g) != null) {
-                                        showToast("Keine Zahlen erlaubt", 2000, "error", e.target.id);
+                                        showToast(
+                                            "Keine Zahlen erlaubt", 
+                                            2000, 
+                                            "error", 
+                                            e.target.id);
                                     } else if (e.target.value.length >= 75) {
-                                        showToast("Maximal 75 Zeichen erlaubt", 2000, "error", e.target.id);
+                                        showToast(
+                                            "Maximal 75 Zeichen erlaubt", 
+                                            2000, 
+                                            "error", 
+                                            e.target.id);
                                     }
                                 } else {
                                     validateInput(e.target, true);
@@ -370,7 +408,11 @@ function App() {
                             type="textarea"
                             onChange={e => {
                                 if (e.target.value.length >= 150) {
-                                    showToast("Maximal 150 Zeichen", 2000, "error", e.target.id);
+                                    showToast(
+                                        "Maximal 150 Zeichen", 
+                                        2000, 
+                                        "error", 
+                                        e.target.id);
                                     validateInput(e.target, false);
                                     setDisabled(true);
                                 } else {
