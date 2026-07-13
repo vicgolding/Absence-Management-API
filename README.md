@@ -44,11 +44,11 @@ Tasks and To-Dos
 - [X] API endpoint for creating a new request
 - [X] API endpoint for updating a specific request by its GUID
 - [X] API endpoint for deleting a specific request by its GUID
-- [ ] API endpoint for approving a specific request by its GUID
-- [ ] API endpoint for denying a specific request by its GUID
-- [ ] Implement business rule: Only pending requests can be approved or denied
+- [X] API endpoint for approving a specific request by its GUID
+- [X] API endpoint for denying a specific request by its GUID
+- [X] Implement business rule: Only pending requests can be approved or denied
 - [ ] Implement business rule: No time overlaps between employees
-- [ ] Implement business rule: Approved/denied requests are read-only
+- [X] Implement business rule: Approved/denied requests are read-only
 - [X] Functioning frontend implementation using React
 - [X] Frontend implementation: Overview of all requests
 - [X] Frontend implementation: Form for new request
