@@ -6,7 +6,6 @@ namespace Absence_Management_API.Domain.Entities;
 public class AbsenceRequest
 {
     public Guid Id { get; private set; }
-    [RegularExpression(@"^\d$", ErrorMessage = "The name cannot contain numbers.")]
     [StringLength(
         75, ErrorMessage = "The employee name field cannot exceed 100 characters. "
     )]
