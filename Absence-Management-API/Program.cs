@@ -3,6 +3,7 @@ using Absence_Management_API.Infrastructure;
 using Absence_Management_API.Infrastructure.Repositories;
 using Absence_Management_API.Domain.Entities;
 using Absence_Management_API.Domain.Interfaces;
+using Absence_Management_API.Domain.Enums;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +43,7 @@ using (var scope = app.Services.CreateScope())
         db.AbsenceRequests.AddRange(
             new AbsenceRequest(
                 "Leia Organa",
-                0,
+                AbsenceType.Holiday,
                 0,
                 new DateTime(1970, 1, 1),
                 new DateTime(1970, 1, 4),
@@ -50,19 +51,27 @@ using (var scope = app.Services.CreateScope())
             ),
             new AbsenceRequest(
                 "Tommy Vercetti",
+                AbsenceType.Illness,
                 0, 
-                0, 
-                new DateTime(1970, 1, 1), 
-                new DateTime(1970, 1, 4),
+                new DateTime(1970, 1, 5), 
+                new DateTime(1970, 1, 7),
                 "heckin good boys and girls pupper big ol pupper doge"
             ),
             new AbsenceRequest(
                 "Diana Prince", 
+                AbsenceType.Course, 
                 0, 
-                0, 
-                new DateTime(1970, 1, 1), 
-                new DateTime(1970, 1, 4), 
+                new DateTime(1970, 1, 8), 
+                new DateTime(1970, 1, 10), 
                 "Borkf wow such tempt heckin bork big ol pupper shoober tungg"
+            ),
+            new AbsenceRequest(
+                "John Marston", 
+                AbsenceType.Other, 
+                0, 
+                new DateTime(1970, 1, 11), 
+                new DateTime(1970, 1, 14), 
+                "doing me a frighten most angery pupper I have ever seen"
             )
         );
         db.SaveChanges();

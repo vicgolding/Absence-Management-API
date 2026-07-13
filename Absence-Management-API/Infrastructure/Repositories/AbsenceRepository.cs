@@ -19,6 +19,7 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
 
     public async Task AddAsync(AbsenceRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
         _context.AbsenceRequests.Add(request);
         await _context.SaveChangesAsync();
     }
@@ -26,6 +27,7 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
     public async Task<AbsenceRequest?> UpdateAsync(Guid id, AbsenceRequest request)
     {
         var existingRequest = await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
+        ArgumentNullException.ThrowIfNull(existingRequest);
         existingRequest.AbsenceStatus = request.AbsenceStatus;
         await _context.SaveChangesAsync();
         return request;
@@ -34,6 +36,7 @@ public class AbsenceRepository(ApplicationDbContext context) : IAbsenceRepositor
     public async Task<AbsenceRequest?> RemoveAsync(Guid id)
     {
         var existingRequest = await _context.AbsenceRequests.FirstOrDefaultAsync(x => x.Id == id);
+        ArgumentNullException.ThrowIfNull(existingRequest);
         _context.Remove(existingRequest);
         await _context.SaveChangesAsync();
         return existingRequest;
