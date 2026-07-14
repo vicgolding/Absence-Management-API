@@ -12,7 +12,7 @@ Built as learning project using .NET and React, and following DDD principles.
 
 Project structure
 ---
-- Backend (.NET 8)
+- Backend (.NET)
     - Program.cs
     - Domain layer
         - Entities
@@ -34,47 +34,17 @@ Project structure
     - client-app/src/App.js
     - client-app/src/functions.js
 
-Tasks and To-Dos
----
-
-- [X] Functioning backend implementation using .NET/C#
-- [X] Project structure follows a simple DDD architecture
-- [X] API endpoint for getting all requests
-- [X] API endpoint for getting a specific request by its GUID
-- [X] API endpoint for creating a new request
-- [X] API endpoint for updating a specific request by its GUID
-- [X] API endpoint for deleting a specific request by its GUID
-- [X] API endpoint for approving a specific request by its GUID
-- [X] API endpoint for denying a specific request by its GUID
-- [X] Implement business rule: Only pending requests can be approved or denied
-- [ ] Implement business rule: No time overlaps between employees
-- [X] Implement business rule: Approved/denied requests are read-only
-- [X] Functioning frontend implementation using React
-- [X] Frontend implementation: Overview of all requests
-- [X] Frontend implementation: Form for new request
-- [X] Frontend implementation: Ability to approve request
-- [X] Frontend implementation: Ability to deny request
-- [X] Frontend implementation: Ability to delete request
-- [X] Frontend implementation: View of current request status
-- [X] Frontend implementation: Simple success and error notifications
-- [X] Frontend implementation: Simple form validation
-- [ ] Implement tests
-- [ ] Optional: Docker deployment
-- [X] README: Brief project description (what the project does, why the project is useful)
-- [X] README: Project structure
-- [ ] README: How to get started (prerequisites, installation guide)
-- [ ] README: Guide on how to run the tests
-- [ ] README: How to use the system
-- [ ] README: How to deploy the system
-
 Built with
 ---
 
 - SQLite (file-based) - Database
-- .NET/C# - Backend
-- React - Frontend
-- Bootstrap / Reactstrap - UI Framework
-- Fetch API - communication with backend
+- .NET v10.0/C# - Backend
+- React v19.2.7 - Frontend
+- Bootstrap v5.3.8 - UI Framework
+- Bootstrap Icons v1.13.1 - Icon library
+- Reactstrap v9.2.3 - React component library
+- Toastify v11.1.0 - React toast notifications library
+- Fetch API - JavaScript interface for making HTTP requests
 
 Contribute
 ---
