@@ -19,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -43,5 +43,8 @@
   "allowScripts": {
     "core-js@3.49.0": true,
     "core-js-pure@3.49.0": true
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
   }
 }
