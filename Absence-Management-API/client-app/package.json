@@ -2,6 +2,7 @@
   "name": "client-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -43,5 +44,8 @@
   "allowScripts": {
     "core-js@3.49.0": true,
     "core-js-pure@3.49.0": true
+  },
+  "devDependencies": {
+    "chai": "^6.2.2"
   }
 }
