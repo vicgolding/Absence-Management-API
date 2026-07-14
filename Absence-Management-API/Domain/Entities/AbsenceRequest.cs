@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Absence_Management_API.Domain.Enums;
 
 namespace Absence_Management_API.Domain.Entities;
@@ -9,18 +10,19 @@ public class AbsenceRequest
     [StringLength(
         75, ErrorMessage = "The employee name field cannot exceed 100 characters. "
     )]
-    public string EmployeeName { get; private set; }
-    public AbsenceType AbsenceType { get; private set; }
-    public AbsenceStatus AbsenceStatus { get; set; }
+    public required string EmployeeName { get; init; }
+    public required AbsenceType AbsenceType { get; init; }
+    public required AbsenceStatus AbsenceStatus { get; set; }
     [DataType(DataType.DateTime)]
-    public DateTime StartDate { get; private set; }
+    public required DateTime StartDate { get; set; }
     [DataType(DataType.DateTime)]
-    public DateTime EndDate { get; private set; }
+    public required DateTime EndDate { get; set; }
     [StringLength(
         150, ErrorMessage = "The comment field cannot exceed 100 characters. "
     )]
     public string? Comment { get; private set; }
     
+    [SetsRequiredMembers]
     public AbsenceRequest(
         string employeeName,
         AbsenceType absenceType,
