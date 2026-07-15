@@ -1,6 +1,7 @@
 ﻿import { equal } from "node:assert";
 import { assert, expect } from "chai";
 import { formatName } from "../src/functions.js";
+import { ABSENCEREQUESTS_API_URL } from '../src/data/data.js';
 import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
 import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
 
@@ -11,6 +12,12 @@ describe("Mocha", () => {
        // a sanity check is a trivial function or test that proves we set things up correctly
        expect(true).to.be.ok;
    }); 
+});
+
+describe("ABSENCEREQUESTS_API_URL", () => {
+    it("should contain a valid URL", () => {
+        expect(ABSENCEREQUESTS_API_URL).to.include("https://");
+    });
 });
 
 describe("formatName", () => {
