@@ -1,6 +1,6 @@
 ﻿import { equal } from "node:assert";
 import { assert, expect } from "chai";
-import { formatName } from "../src/main.js";
+import { formatName } from "../src/functions.js";
 import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
 import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
 
@@ -14,9 +14,14 @@ describe("Mocha", function () {
 });
 
 describe("formatName", function () {
-    const fullName = "arthur morgan";
-    const expected = "Arthur Morgan";
     // TODO: function should only accept string type
+    let fullName; 
+    let expected;
+    before(function () {
+        fullName = "arthur morgan";
+        expected = "Arthur Morgan";
+    })
+    
     it("should correctly convert a full name to uppercase", function () {
         equal(formatName(fullName), expected);
     });

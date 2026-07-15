@@ -5,7 +5,7 @@ import absenceTypes from './data/absenceTypes.json';
 import absenceStatuses from './data/absenceStatuses.json';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
-import { validateInput, showToast, formatName } from './main.js';
+import { validateInput, showToast, formatName } from './functions.js';
 
 const path = "https://localhost:5013/api/absence-requests";
 
