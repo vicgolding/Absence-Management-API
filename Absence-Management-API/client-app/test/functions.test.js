@@ -1,6 +1,6 @@
 ﻿import { equal } from "node:assert";
 import { assert, expect } from "chai";
-import { formatName } from "../src/functions.js";
+import { formatName, isTextLengthValid, isString } from "../src/functions.js";
 import { ABSENCEREQUESTS_API_URL } from '../src/data/data.js';
 import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
 import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
@@ -17,6 +17,24 @@ describe("Mocha", () => {
 describe("ABSENCEREQUESTS_API_URL", () => {
     it("should contain a valid URL", () => {
         expect(ABSENCEREQUESTS_API_URL).to.include("https://");
+    });
+});
+
+describe("isTextLengthValid", () => {
+    it("should return true if length is valid", () => {
+        expect(isTextLengthValid("text", 5)).to.be.true;
+    });
+    it("should return a boolean if length is invalid", () => {
+        expect(isTextLengthValid("longtext", 5)).to.be.false;
+    });
+});
+
+describe("isString", () => {
+    it("should return true if is string", () => {
+        expect(isString("string")).to.be.true;
+    });
+    it("should return false if is not string", () => {
+        expect(isString(123)).to.be.false;
     });
 });
 

@@ -12,16 +12,8 @@ export function isTextLengthValid(inputText, maxLength = 50) {
     return inputText.length <= maxLength;
 }
 
-export function isInputTypeValid(input, requiredType) {
-    switch(requiredType)  {
-        case "string":
-            return !input.match(/\d/g);
-        case "number":
-            console.log("is number");
-            break;
-        default:
-            console.log("who cares");
-    }
+export function isString(input) {
+    return !input.match(/\d/g);
 }
 
 export function highlightInputError(inputField, isInvalid) {
