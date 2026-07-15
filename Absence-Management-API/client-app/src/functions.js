@@ -8,12 +8,25 @@ export function formatName(fullName) {
     return titleCasedName.join(' ');
 }
 
-export function validateInput(input, isValid) {
-    if (!isValid) {
-        if (!input.classList.contains("is-invalid")) {input.classList.add("is-invalid");}
-    } else {
-        if (input.classList.contains("is-invalid")) {input.classList.remove("is-invalid");}
+export function isTextLengthValid(inputText, maxLength = 50) {
+    return inputText.length <= maxLength;
+}
+
+export function isInputTypeValid(input, requiredType) {
+    switch(requiredType)  {
+        case "string":
+            return !input.match(/\d/g);
+        case "number":
+            console.log("is number");
+            break;
+        default:
+            console.log("who cares");
     }
+}
+
+export function highlightInputError(inputField, isInvalid) {
+    if (isInvalid && !inputField.classList.contains("is-invalid")) { inputField.classList.add("is-invalid"); }
+    if (!isInvalid && inputField.classList.contains("is-invalid")) { inputField.classList.remove("is-invalid"); }
 }
 
 export function showToast(

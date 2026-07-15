@@ -6,7 +6,7 @@ import absenceTypes from './data/absenceTypes.json';
 import absenceStatuses from './data/absenceStatuses.json';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
-import { validateInput, showToast, formatName } from './functions.js';
+import {isTextLengthValid, showToast, formatName, isInputTypeValid, highlightInputError} from './functions.js';
 
 function App() {
   const [ absences, setAbsences ] = useState([]);
@@ -234,10 +234,10 @@ function App() {
                     2000, 
                     "error", 
                     e.target.id);
-                validateInput(e.target, false);
+                highlightInputError(e.target, true);
                 setDisabled(true);
             } else {
-                validateInput(e.target, true);
+                highlightInputError(e.target, false);
                 setDisabled(false);
             }
         }
@@ -251,10 +251,10 @@ function App() {
                     2000,
                     "error",
                     e.target.id);
-                validateInput(e.target, false);
+                highlightInputError(e.target, true);
                 setDisabled(true);
             } else {
-                validateInput(e.target, true);
+                highlightInputError(e.target, false);
                 setDisabled(false);
             }
         }
@@ -336,26 +336,28 @@ function App() {
                             placeholder="Name eingeben"
                             required
                             onChange={e => {
-                                if (e.target.value.match(/\d/g) != null 
-                                    || e.target.value.length >= 75) {
-                                    validateInput(e.target, false);
+                                if (!isTextLengthValid(e.target.value, 75)) {
+                                    showToast(
+                                        "Maximal 75 Zeichen erlaubt",
+                                        2000,
+                                        "error",
+                                        e.target.id);
                                     setDisabled(true);
-                                    if (e.target.value.match(/\d/g) != null) {
-                                        showToast(
-                                            "Keine Zahlen erlaubt", 
-                                            2000, 
-                                            "error", 
-                                            e.target.id);
-                                    } else if (e.target.value.length >= 75) {
-                                        showToast(
-                                            "Maximal 75 Zeichen erlaubt", 
-                                            2000, 
-                                            "error", 
-                                            e.target.id);
-                                    }
                                 } else {
-                                    validateInput(e.target, true);
                                     setDisabled(false);
+                                    highlightInputError(e.target, false);
+                                }
+                                if (!isInputTypeValid(e.target.value, "string")) {
+                                    showToast(
+                                        "Keine Zahlen erlaubt",
+                                        2000,
+                                        "error",
+                                        e.target.id);
+                                    setDisabled(true);
+                                    highlightInputError(e.target, true);
+                                } else {
+                                    setDisabled(false);
+                                    highlightInputError(e.target, false);
                                 }
                             }}
                         />
@@ -397,7 +399,8 @@ function App() {
                             required
                             ref={startDateRef}
                             value={startDateValue}
-                            onChange={(e) => validateStartDate(e)}
+                            onChange={(e) => 
+                                validateStartDate(e)}
                         />
                     </Col>
                 </FormGroup>
@@ -417,7 +420,8 @@ function App() {
                             required
                             ref={endDateRef}
                             value={endDateValue}
-                            onChange={(e) => validateEndDate(e)}
+                            onChange={(e) => 
+                                validateEndDate(e)}
                         />
                     </Col>
                 </FormGroup>
@@ -434,17 +438,16 @@ function App() {
                             name="comment"
                             type="textarea"
                             onChange={e => {
-                                if (e.target.value.length >= 150) {
+                                if (!isTextLengthValid(e.target.value, 150)) {
                                     showToast(
-                                        "Maximal 150 Zeichen", 
-                                        2000, 
-                                        "error", 
+                                        "Maximal 75 Zeichen erlaubt",
+                                        2000,
+                                        "error",
                                         e.target.id);
-                                    validateInput(e.target, false);
                                     setDisabled(true);
                                 } else {
-                                    validateInput(e.target, true);
                                     setDisabled(false);
+                                    highlightInputError(e.target, false);
                                 }
                             }}
                         />
