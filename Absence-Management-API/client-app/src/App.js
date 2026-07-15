@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
+import absenceTypes from './data/absenceTypes.json';
+import absenceStatuses from './data/absenceStatuses.json';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
 import { validateInput, showToast, formatName } from './main.js';
@@ -61,7 +63,6 @@ function App() {
     const RequestRow = absence => {
         const [ absenceRequest ] = useState(absence.absence);
         const absenceType = absenceRequest.absenceType;
-        const absenceTypes = ["Urlaub", "Krankheit", "Weiterbildung", "Sonstiges"];
         async function handleRemoveRequest() {
             try {
                 await fetch(`${path}/${absenceRequest.id}`, {
@@ -111,7 +112,6 @@ function App() {
 
     const AbsenceStatus = (props) => {
         const [ status, setStatus ] = useState(props.status);
-        const absenceStatuses = ["Offen", "Genehmigt", "Abgelehnt"];
 
         async function ApproveRequest() {
             const requestId = props.id;
