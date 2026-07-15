@@ -3,7 +3,7 @@ import './App.css';
 import './bootstrap.min.css';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
-import { validateInput, showToast } from './functions';
+import { validateInput, showToast, formatName } from './main.js';
 
 const path = "https://localhost:5013/api/absence-requests";
 
@@ -261,7 +261,7 @@ function App() {
         }
         
         async function handleSubmit(formData) {
-            const employeeName = formData.get("employeeName");
+            const employeeName = formatName(formData.get("employeeName"));
             const absenceType = parseFloat(formData.get("selectAbsenceType"));
             const startDate = formData.get("startDate");
             const endDate = formData.get("endDate");
