@@ -65,6 +65,36 @@ describe("React application", () => {
     after(async () => await driver.quit());
 });
 
+describe("does employeeName input trigger error", () => {
+    let driver;
+
+    before(async function () {
+        driver = await new Builder().forBrowser('chrome').build();
+    });
+    
+    it("shows error toast", async () => {
+        await driver.get(DEV_BASE_URL);
+        await driver.manage().setTimeouts({implicit: 2000});
+        let employeeNameField = await driver.findElement(By.name("employeeName"));
+        await employeeNameField.sendKeys("0");
+        let errorToast = await driver.findElement(By.id("error-toast-employeeName"));
+        assert.exists(errorToast);
+    });
+
+    it("highlights field error", async () => {
+        await driver.get(DEV_BASE_URL);
+        await driver.manage().setTimeouts({implicit: 2000});
+        let employeeNameField = await driver.findElement(By.name("employeeName"));
+        await employeeNameField.sendKeys("0");
+        let fieldClass = await employeeNameField.getAttribute("class");
+        expect(fieldClass).to.have.string('is-invalid');
+    });
+    
+    // TODO: check if submit button is disabled
+    
+    after(async () => await driver.quit());
+});
+
 describe("isTextLengthValid", () => {
     it("should return true if length is valid", () => {
         expect(isTextLengthValid("text", 5)).to.be.true;
