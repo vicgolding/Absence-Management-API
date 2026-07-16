@@ -46,6 +46,12 @@ Built with
 - Toastify v11.1.0 - React toast notifications library
 - Fetch API - JavaScript interface for making HTTP requests
 
+Testing
+---
+
+- [v1.0.0 Test Plan](https://github.com/vicgolding/Absence-Management-API/wiki/v1.0.0-Test-Plan)
+- [Example Bug Report](https://github.com/vicgolding/Absence-Management-API/wiki/Example-Bug-Report)
+
 Contribute
 ---
 
