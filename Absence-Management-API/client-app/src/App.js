@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
-import { ABSENCEREQUESTS_API_URL } from './data/data';
+import { ABSENCE_REQUESTS_API_URL } from './data/data';
 import absenceTypes from './data/absenceTypes.json';
 import absenceStatuses from './data/absenceStatuses.json';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
@@ -12,7 +12,7 @@ function App() {
   const [ absences, setAbsences ] = useState([]);
   
   useEffect(() => {
-    fetch(ABSENCEREQUESTS_API_URL)
+    fetch(ABSENCE_REQUESTS_API_URL)
         .then(response => response.json())
         .then((data) => setAbsences(data))
         .catch(error => showToast(`API error: ${error}`, 2000, "error"));
@@ -64,7 +64,7 @@ function App() {
         const absenceType = absenceRequest.absenceType;
         async function handleRemoveRequest() {
             try {
-                await fetch(`${ABSENCEREQUESTS_API_URL}/${absenceRequest.id}`, {
+                await fetch(`${ABSENCE_REQUESTS_API_URL}/${absenceRequest.id}`, {
                     method: 'DELETE'
                 })
                     .then((response) => {
@@ -122,7 +122,7 @@ function App() {
                             "Antrag darf nicht mehr bearbeitet werden",
                             2000, "error");
                     } else {
-                        await fetch(`${ABSENCEREQUESTS_API_URL}/approve?id=${requestId}`, {
+                        await fetch(`${ABSENCE_REQUESTS_API_URL}/approve?id=${requestId}`, {
                             method: 'POST',
                             headers: {
                                 Accept: 'application/json'
@@ -161,7 +161,7 @@ function App() {
                             "Antrag darf nicht mehr bearbeitet werden",
                             2000, "error");
                     } else {
-                        await fetch(`${ABSENCEREQUESTS_API_URL}/deny?id=${requestId}`, {
+                        await fetch(`${ABSENCE_REQUESTS_API_URL}/deny?id=${requestId}`, {
                             method: 'POST',
                             headers: {
                                 Accept: 'application/json'
@@ -277,7 +277,7 @@ function App() {
             );
             try {
                 const response = await fetch(
-                    ABSENCEREQUESTS_API_URL, {
+                    ABSENCE_REQUESTS_API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: data,

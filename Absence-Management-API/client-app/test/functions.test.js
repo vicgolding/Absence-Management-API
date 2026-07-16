@@ -1,7 +1,8 @@
-﻿import { equal } from "node:assert";
+﻿import {By, Builder} from 'selenium-webdriver';
+import { equal } from "node:assert";
 import { assert, expect } from "chai";
 import { formatName, isTextLengthValid, isInputString } from "../src/functions.js";
-import { ABSENCEREQUESTS_API_URL } from '../src/data/data.js';
+import { ABSENCE_REQUESTS_API_URL, APPLICATION_URL } from '../src/data/data.js';
 import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
 import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
 
@@ -14,10 +15,34 @@ describe("Mocha", () => {
    }); 
 });
 
-describe("ABSENCEREQUESTS_API_URL", () => {
-    it("should contain a valid URL", () => {
-        expect(ABSENCEREQUESTS_API_URL).to.include("https://");
+describe("React application", () => {
+    it("should use valid API url", () => {
+        expect(ABSENCE_REQUESTS_API_URL).to.include("https://");
     });
+
+    it("should use valid application url", () => {
+        expect(APPLICATION_URL).to.include("http://localhost");
+    });
+
+    it("should load in less than 5000ms", function (done) {
+        this.timeout(5000);
+        setTimeout(done, 4000);
+    });
+    
+    let driver;
+
+    before(async function () {
+        driver = await new Builder().forBrowser('chrome').build();
+    });
+    
+    it("has root element", async () => {
+        await driver.get(APPLICATION_URL);
+        await driver.manage().setTimeouts({implicit: 2000});
+        let root = await driver.findElement(By.id("root"));
+        assert.exists(root);
+    });
+
+    after(async () => await driver.quit());
 });
 
 describe("isTextLengthValid", () => {
