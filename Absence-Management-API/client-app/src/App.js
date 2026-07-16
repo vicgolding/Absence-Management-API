@@ -1,17 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
+import { ABSENCEREQUESTS_API_URL } from './data/data.js';
+import absenceTypes from './data/absenceTypes.json';
+import absenceStatuses from './data/absenceStatuses.json';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
-import { validateInput, showToast } from './functions';
-
-const path = "https://localhost:5013/api/absence-requests";
+import {isTextLengthValid, showToast, formatName, isString, highlightInputError} from './functions.js';
 
 function App() {
   const [ absences, setAbsences ] = useState([]);
   
   useEffect(() => {
-    fetch(path)
+    fetch(ABSENCEREQUESTS_API_URL)
         .then(response => response.json())
         .then((data) => setAbsences(data))
         .catch(error => showToast(`API error: ${error}`, 2000, "error"));
@@ -61,10 +62,9 @@ function App() {
     const RequestRow = absence => {
         const [ absenceRequest ] = useState(absence.absence);
         const absenceType = absenceRequest.absenceType;
-        const absenceTypes = ["Urlaub", "Krankheit", "Weiterbildung", "Sonstiges"];
         async function handleRemoveRequest() {
             try {
-                await fetch(`${path}/${absenceRequest.id}`, {
+                await fetch(`${ABSENCEREQUESTS_API_URL}/${absenceRequest.id}`, {
                     method: 'DELETE'
                 })
                     .then((response) => {
@@ -111,7 +111,6 @@ function App() {
 
     const AbsenceStatus = (props) => {
         const [ status, setStatus ] = useState(props.status);
-        const absenceStatuses = ["Offen", "Genehmigt", "Abgelehnt"];
 
         async function ApproveRequest() {
             const requestId = props.id;
@@ -123,7 +122,7 @@ function App() {
                             "Antrag darf nicht mehr bearbeitet werden",
                             2000, "error");
                     } else {
-                        await fetch(`${path}/approve?id=${requestId}`, {
+                        await fetch(`${ABSENCEREQUESTS_API_URL}/approve?id=${requestId}`, {
                             method: 'POST',
                             headers: {
                                 Accept: 'application/json'
@@ -162,7 +161,7 @@ function App() {
                             "Antrag darf nicht mehr bearbeitet werden",
                             2000, "error");
                     } else {
-                        await fetch(`${path}/deny?id=${requestId}`, {
+                        await fetch(`${ABSENCEREQUESTS_API_URL}/deny?id=${requestId}`, {
                             method: 'POST',
                             headers: {
                                 Accept: 'application/json'
@@ -235,10 +234,10 @@ function App() {
                     2000, 
                     "error", 
                     e.target.id);
-                validateInput(e.target, false);
+                highlightInputError(e.target, true);
                 setDisabled(true);
             } else {
-                validateInput(e.target, true);
+                highlightInputError(e.target, false);
                 setDisabled(false);
             }
         }
@@ -252,16 +251,16 @@ function App() {
                     2000,
                     "error",
                     e.target.id);
-                validateInput(e.target, false);
+                highlightInputError(e.target, true);
                 setDisabled(true);
             } else {
-                validateInput(e.target, true);
+                highlightInputError(e.target, false);
                 setDisabled(false);
             }
         }
         
         async function handleSubmit(formData) {
-            const employeeName = formData.get("employeeName");
+            const employeeName = formatName(formData.get("employeeName"));
             const absenceType = parseFloat(formData.get("selectAbsenceType"));
             const startDate = formData.get("startDate");
             const endDate = formData.get("endDate");
@@ -278,7 +277,7 @@ function App() {
             );
             try {
                 const response = await fetch(
-                    path, {
+                    ABSENCEREQUESTS_API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: data,
@@ -337,26 +336,28 @@ function App() {
                             placeholder="Name eingeben"
                             required
                             onChange={e => {
-                                if (e.target.value.match(/\d/g) != null 
-                                    || e.target.value.length >= 75) {
-                                    validateInput(e.target, false);
+                                if (!isTextLengthValid(e.target.value, 75)) {
+                                    showToast(
+                                        "Maximal 75 Zeichen erlaubt",
+                                        2000,
+                                        "error",
+                                        e.target.id);
                                     setDisabled(true);
-                                    if (e.target.value.match(/\d/g) != null) {
-                                        showToast(
-                                            "Keine Zahlen erlaubt", 
-                                            2000, 
-                                            "error", 
-                                            e.target.id);
-                                    } else if (e.target.value.length >= 75) {
-                                        showToast(
-                                            "Maximal 75 Zeichen erlaubt", 
-                                            2000, 
-                                            "error", 
-                                            e.target.id);
-                                    }
                                 } else {
-                                    validateInput(e.target, true);
                                     setDisabled(false);
+                                    highlightInputError(e.target, false);
+                                }
+                                if (!isString(e.target.value, "string")) {
+                                    showToast(
+                                        "Keine Zahlen erlaubt",
+                                        2000,
+                                        "error",
+                                        e.target.id);
+                                    setDisabled(true);
+                                    highlightInputError(e.target, true);
+                                } else {
+                                    setDisabled(false);
+                                    highlightInputError(e.target, false);
                                 }
                             }}
                         />
@@ -398,7 +399,8 @@ function App() {
                             required
                             ref={startDateRef}
                             value={startDateValue}
-                            onChange={(e) => validateStartDate(e)}
+                            onChange={(e) => 
+                                validateStartDate(e)}
                         />
                     </Col>
                 </FormGroup>
@@ -418,7 +420,8 @@ function App() {
                             required
                             ref={endDateRef}
                             value={endDateValue}
-                            onChange={(e) => validateEndDate(e)}
+                            onChange={(e) => 
+                                validateEndDate(e)}
                         />
                     </Col>
                 </FormGroup>
@@ -435,17 +438,16 @@ function App() {
                             name="comment"
                             type="textarea"
                             onChange={e => {
-                                if (e.target.value.length >= 150) {
+                                if (!isTextLengthValid(e.target.value, 150)) {
                                     showToast(
-                                        "Maximal 150 Zeichen", 
-                                        2000, 
-                                        "error", 
+                                        "Maximal 75 Zeichen erlaubt",
+                                        2000,
+                                        "error",
                                         e.target.id);
-                                    validateInput(e.target, false);
                                     setDisabled(true);
                                 } else {
-                                    validateInput(e.target, true);
                                     setDisabled(false);
+                                    highlightInputError(e.target, false);
                                 }
                             }}
                         />

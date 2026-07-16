@@ -1,0 +1,1 @@
+﻿export const ABSENCEREQUESTS_API_URL = 'https://localhost:5013/api/absence-requests';
