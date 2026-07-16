@@ -120,7 +120,8 @@ function App() {
                     if (absenceRequest.absenceStatus !== 0) {
                         showToast(
                             "Antrag darf nicht mehr bearbeitet werden",
-                            2000, "error");
+                            2000, 
+                            "error");
                     } else {
                         await fetch(`${API_URL}/approve?id=${requestId}`, {
                             method: 'POST',
@@ -159,7 +160,8 @@ function App() {
                     if (absenceRequest.absenceStatus !== 0) {
                         showToast(
                             "Antrag darf nicht mehr bearbeitet werden",
-                            2000, "error");
+                            2000, 
+                            "error");
                     } else {
                         await fetch(`${API_URL}/deny?id=${requestId}`, {
                             method: 'POST',

@@ -32,12 +32,13 @@ export function showToast(
     customId = undefined
 ) {
     toast(message, {
-        toastId: customId,
+        toastId: customId ? `${type}-toast-${customId}` : "",
         type: type,
         position: "top-center",
         autoClose: autoClose,
         hideProgressBar: true,
         theme: "colored",
         transition: Slide,
+        className: `${type}-toast-type`,
     });
 }
