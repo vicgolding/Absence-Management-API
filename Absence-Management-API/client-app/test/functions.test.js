@@ -1,8 +1,10 @@
 ﻿import {By, Builder} from 'selenium-webdriver';
 import { equal } from "node:assert";
-import { assert, expect } from "chai";
+import {expect, assert} from "chai";
+import * as chai from "chai";
+import { request, default as chaiHttp } from 'chai-http';
 import { formatName, isTextLengthValid, isInputString } from "../src/functions.js";
-import { ABSENCE_REQUESTS_API_URL, APPLICATION_URL } from '../src/data/data.js';
+import { API_URL, DEV_BASE_URL, API_BASE_URL } from '../src/data/data.js';
 import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
 import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
 
@@ -16,19 +18,37 @@ describe("Mocha", () => {
 });
 
 describe("React application", () => {
+
+    chai.use(chaiHttp);
+    
     it("should use valid API url", () => {
-        expect(ABSENCE_REQUESTS_API_URL).to.include("https://");
+        expect(API_URL).to.include("/api/absence-requests");
     });
 
-    it("should use valid application url", () => {
-        expect(APPLICATION_URL).to.include("http://localhost");
-    });
+    it("API url should use HTTPS", () => {
+        expect(API_URL).to.include("https://");
+    })
 
-    it("should load in less than 5000ms", function (done) {
-        this.timeout(5000);
-        setTimeout(done, 4000);
+    it('GET request for API endpoint should return 200 response status', () => {
+        fetch(API_URL)
+            .then(response => {
+                expect(response).to.have.status(200);
+            });
     });
     
+    it("should be valid dev url", () => {
+        expect(DEV_BASE_URL).to.include("http://localhost");
+    });
+
+    it('GET request for Node.js server should return 200 response status', done => {
+        request.execute(DEV_BASE_URL)
+            .get('/')
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                done();
+            });
+    });
+
     let driver;
 
     before(async function () {
@@ -36,7 +56,7 @@ describe("React application", () => {
     });
     
     it("has root element", async () => {
-        await driver.get(APPLICATION_URL);
+        await driver.get(DEV_BASE_URL);
         await driver.manage().setTimeouts({implicit: 2000});
         let root = await driver.findElement(By.id("root"));
         assert.exists(root);
@@ -75,7 +95,7 @@ describe("formatName", () => {
         expected = "Arthur Morgan";
     })
     
-    it("should correctly convert a full name to uppercase", () => {
+    it("should correctly convert a full name to title case", () => {
         equal(formatName(fullName), expected);
     });
 });
