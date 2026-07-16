@@ -12,8 +12,12 @@ export function isTextLengthValid(inputText, maxLength = 50) {
     return inputText.length <= maxLength;
 }
 
-export function isString(input) {
-    return !input.match(/\d/g);
+export function isInputString(input) {
+    if (typeof input === "string") {
+        return !input.match(/\d/g);
+    } else {
+        return false;
+    }
 }
 
 export function highlightInputError(inputField, isInvalid) {

@@ -1,6 +1,6 @@
 ﻿import { equal } from "node:assert";
 import { assert, expect } from "chai";
-import { formatName, isTextLengthValid, isString } from "../src/functions.js";
+import { formatName, isTextLengthValid, isInputString } from "../src/functions.js";
 import { ABSENCEREQUESTS_API_URL } from '../src/data/data.js';
 import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
 import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
@@ -29,12 +29,15 @@ describe("isTextLengthValid", () => {
     });
 });
 
-describe("isString", () => {
+describe("isInputString", () => {
     it("should return true if is string", () => {
-        expect(isString("string")).to.be.true;
+        expect(isInputString("string")).to.be.true;
     });
     it("should return false if is not string", () => {
-        expect(isString(123)).to.be.false;
+        expect(isInputString(123)).to.be.false;
+    });
+    it("should return false if string contains numbers", () => {
+        expect(isInputString("123")).to.be.false;
     });
 });
 
