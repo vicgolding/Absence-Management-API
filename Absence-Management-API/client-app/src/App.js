@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
-import { ABSENCEREQUESTS_API_URL } from './data/data.js';
+import { ABSENCEREQUESTS_API_URL } from './data/data';
 import absenceTypes from './data/absenceTypes.json';
 import absenceStatuses from './data/absenceStatuses.json';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
-import {isTextLengthValid, showToast, formatName, isString, highlightInputError} from './functions.js';
+import {isTextLengthValid, showToast, formatName, isString, highlightInputError} from './functions';
 
 function App() {
   const [ absences, setAbsences ] = useState([]);
