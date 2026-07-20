@@ -80,12 +80,6 @@ using (var scope = app.Services.CreateScope())
             orderby r.EmployeeName
             select r;
         Console.WriteLine("Seed of mock data successful.");
-        foreach (var r in query)
-        {
-            Console.WriteLine($"{r.EmployeeName} requests absence with ID number {r.Id}");
-        }
-        Console.WriteLine("Press a key to exit...");
-        Console.ReadKey();
     }
 }
 
