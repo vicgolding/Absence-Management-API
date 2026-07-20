@@ -15,11 +15,13 @@
     "react-toastify": "^11.1.0",
     "reactstrap": "^9.2.3",
     "selenium-webdriver": "^4.46.0",
+    "source-map-loader": "^5.0.0",
+    "ts-loader": "^9.6.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "mocha --timeout 5000"
   },
@@ -46,8 +48,10 @@
     "core-js-pure@3.49.0": true
   },
   "devDependencies": {
+    "@types/react-dom": "^19.2.3",
     "chai": "^6.2.2",
     "mocha": "^11.7.6",
+    "typescript": "^7.0.2",
     "vite": "^8.1.5"
   }
 }

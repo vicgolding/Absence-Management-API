@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import './bootstrap.min.css';
-import { API_URL } from './data/data';
-import absenceTypes from './data/absenceTypes.json';
-import absenceStatuses from './data/absenceStatuses.json';
+import { API_URL, absenceTypes, absenceStatuses } from './data/data';
 import { Button, Col, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import { ToastContainer } from 'react-toastify';
 import {isTextLengthValid, showToast, formatName, isInputString, highlightInputError} from './functions';
@@ -349,7 +347,7 @@ function App() {
                                     setDisabled(false);
                                     highlightInputError(e.target, false);
                                 }
-                                if (!isInputString(e.target.value, "string")) {
+                                if (!isInputString(e.target.value)) {
                                     showToast(
                                         "Keine Zahlen erlaubt",
                                         2000,
