@@ -4,9 +4,7 @@ import {expect, assert} from "chai";
 import * as chai from "chai";
 import { request, default as chaiHttp } from 'chai-http';
 import { formatName, isTextLengthValid, isInputString } from "../src/functions.js";
-import { API_URL, DEV_BASE_URL, API_BASE_URL } from '../src/data/data.js';
-import absenceTypes from '../src/data/absenceTypes.json' with { type: 'json' };
-import absenceStatuses from '../src/data/absenceStatuses.json' with { type: 'json' };
+import { API_URL, DEV_BASE_URL, absenceTypes, absenceStatuses } from '../src/data/data.js';
 
 // describe() introduces a test suite - a block of similar unit tests or "test specs"
 describe("Mocha", () => {
